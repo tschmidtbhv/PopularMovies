@@ -39,6 +39,11 @@ public class NetworkUtil {
         return sINSTANCE;
     }
 
+    /**
+     * Load movies for a Type
+     * TODO Type and separation
+     * @param type
+     */
     public static void loadMoviesForType(int type){
 
         Retrofit.Builder builder = new Retrofit.Builder()

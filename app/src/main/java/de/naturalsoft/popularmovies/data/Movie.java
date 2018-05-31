@@ -6,30 +6,37 @@ package de.naturalsoft.popularmovies.data;
  */
 public class Movie {
 
-    private String page;
+    private String title;
+    private String original_title;
+    private String overview;
 
-    public Movie(String page, String total_pages) {
-        this.page = page;
-        this.total_pages = total_pages;
+    public Movie(String title, String original_title, String overview) {
+        this.title = title;
+        this.original_title = original_title;
+        this.overview = overview;
     }
 
-    public String getPage() {
-        return page;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPage(String page) {
-        this.page = page;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getTotal_pages() {
-        return total_pages;
+    public String getOriginal_title() {
+        return original_title;
     }
 
-    public void setTotal_pages(String total_pages) {
-        this.total_pages = total_pages;
+    public void setOriginal_title(String original_title) {
+        this.original_title = original_title;
     }
 
-    private String total_pages;
+    public String getOverview() {
+        return overview;
+    }
 
-
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
 }

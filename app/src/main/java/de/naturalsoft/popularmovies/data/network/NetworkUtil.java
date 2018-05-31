@@ -10,11 +10,11 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 import de.naturalsoft.popularmovies.data.Movie;
+import de.naturalsoft.popularmovies.data.MovieResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * PopularMovies
@@ -27,22 +27,27 @@ public class NetworkUtil {
     private static NetworkUtil sINSTANCE;
 
     private Context mContext;
-    private final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
+    public final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
     private final static String MOVIESKEY = ""; //TODO you need to set the API Key here
 
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
+    private static Retrofit mRetrofit;
 
+
+    public final static int POPULARMOVIES = 0;
+    public final static int TOPRATEDMOVIES = 1;
 
     private NetworkUtil(Context context) {
         mContext = context;
         mDownloadedMovies = new MutableLiveData<List<Movie>>();
     }
 
-    public static NetworkUtil getInstance(Context context) {
+    public static NetworkUtil getInstance(Context context, Retrofit retrofit) {
 
         if (sINSTANCE == null) {
             Log.d(CLASSTAG, "New NetworkUtil");
             sINSTANCE = new NetworkUtil(context.getApplicationContext());
+            mRetrofit = retrofit;
         }
 
         loadMoviesForType(0);
@@ -57,22 +62,29 @@ public class NetworkUtil {
      */
     public static void loadMoviesForType(int type) {
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASEMOVIESURL)
-                .addConverterFactory(GsonConverterFactory.create());
+        MovieClient client = mRetrofit.create(MovieClient.class);
+        Call<MovieResponse> call = null;
 
-        Retrofit retrofit = builder.build();
+        switch (type) {
 
-        MovieClient client = retrofit.create(MovieClient.class);
-        Call<Movie> call = client.getPopularMovies(MOVIESKEY);
-        call.enqueue(new Callback<Movie>() {
+            case POPULARMOVIES:
+                call = client.getPopularMovies(MOVIESKEY);
+                break;
+
+            case TOPRATEDMOVIES:
+                call = client.getTopRatedMovies(MOVIESKEY);
+                break;
+        }
+
+        call.enqueue(new Callback<MovieResponse>() {
             @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
+                mDownloadedMovies.postValue(response.body().getmMovieList());
             }
 
             @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
                 Log.d(CLASSTAG, "CALL onFailure " + t.getLocalizedMessage());
             }
         });

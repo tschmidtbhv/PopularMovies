@@ -28,7 +28,7 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie);
         ButterKnife.bind(this);
 
-        MovieViewModelFactory factory = InjectorUtil.provideMovieViewModelFactory(getApplicationContext());
+        MovieViewModelFactory factory = InjectorUtil.provideMovieViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this,factory).get(MovieActivityViewModel.class);
 
         setUpRecyclerView();

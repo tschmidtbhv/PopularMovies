@@ -3,6 +3,7 @@ package de.naturalsoft.popularmovies.utils;
 import android.content.Context;
 
 import de.naturalsoft.popularmovies.data.MovieRepository;
+import de.naturalsoft.popularmovies.data.network.NetworkUtil;
 import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
 
 /**
@@ -15,9 +16,16 @@ import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
 public class InjectorUtil {
 
 
-    public static MovieViewModelFactory provideMovieViewModelFactory(Context applicationContext) {
+    public static MovieViewModelFactory provideMovieViewModelFactory(Context context) {
 
         //TODO REPO
-        return new MovieViewModelFactory(new MovieRepository());
+        MovieRepository movieRepository = provideMovieRepository(context.getApplicationContext());
+        return new MovieViewModelFactory(movieRepository);
+    }
+
+
+    public static MovieRepository provideMovieRepository(Context context){
+        NetworkUtil networkUtil = NetworkUtil.getInstance(context.getApplicationContext());
+        return MovieRepository.getInstance(networkUtil);
     }
 }

@@ -3,6 +3,7 @@ package de.naturalsoft.popularmovies.data.network;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
@@ -19,10 +20,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class NetworkUtil {
 
+    private final static String CLASSTAG = NetworkUtil.class.getSimpleName();
+
     private static NetworkUtil sINSTANCE;
 
     private Context mContext;
-    private final static String BASEMOVIESURL = "http://api.themoviedb.org/3";
+    private final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
 
 
@@ -34,8 +37,11 @@ public class NetworkUtil {
     public static NetworkUtil getInstance(Context context){
 
         if(sINSTANCE == null){
-            return new NetworkUtil(context.getApplicationContext());
+            Log.d(CLASSTAG, "New NetworkUtil");
+            sINSTANCE = new NetworkUtil(context.getApplicationContext());
         }
+
+        loadMoviesForType(0);
         return sINSTANCE;
     }
 
@@ -57,12 +63,13 @@ public class NetworkUtil {
         call.enqueue(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
+                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + response.raw());
                 mDownloadedMovies.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
-
+                Log.d(CLASSTAG, "CALL onFailure");
             }
         });
 

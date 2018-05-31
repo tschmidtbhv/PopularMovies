@@ -1,5 +1,19 @@
 # PopularMovies Stage 1
 
+Popular Movies app for Udacity Android Developer Nanodegree
+This app retrieves data from The Movie DB.
+
+Libraries are used in this Project are:
+
+Appcombat
+RecyclerView
+Preferences
+ViewModel and LiveData
+Butterknife
+Picasso
+Retrofit
+GSON & Converter
+
 
 
 ## Common Project Requirements Stage 1

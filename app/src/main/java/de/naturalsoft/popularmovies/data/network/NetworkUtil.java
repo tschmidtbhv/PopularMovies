@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.GsonBuilder;
+
 import java.util.List;
 
 import de.naturalsoft.popularmovies.data.Movie;
@@ -26,17 +28,19 @@ public class NetworkUtil {
 
     private Context mContext;
     private final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
+    private final static String MOVIESKEY = ""; //TODO you need to set the API Key here
+
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
 
 
-    private NetworkUtil(Context context){
+    private NetworkUtil(Context context) {
         mContext = context;
         mDownloadedMovies = new MutableLiveData<List<Movie>>();
     }
 
-    public static NetworkUtil getInstance(Context context){
+    public static NetworkUtil getInstance(Context context) {
 
-        if(sINSTANCE == null){
+        if (sINSTANCE == null) {
             Log.d(CLASSTAG, "New NetworkUtil");
             sINSTANCE = new NetworkUtil(context.getApplicationContext());
         }
@@ -48,9 +52,10 @@ public class NetworkUtil {
     /**
      * Load movies for a Type
      * TODO Type and separation
+     *
      * @param type
      */
-    public static void loadMoviesForType(int type){
+    public static void loadMoviesForType(int type) {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(BASEMOVIESURL)
@@ -59,23 +64,22 @@ public class NetworkUtil {
         Retrofit retrofit = builder.build();
 
         MovieClient client = retrofit.create(MovieClient.class);
-        Call<List<Movie>> call =  client.getPopularMovies();
-        call.enqueue(new Callback<List<Movie>>() {
+        Call<Movie> call = client.getPopularMovies(MOVIESKEY);
+        call.enqueue(new Callback<Movie>() {
             @Override
-            public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
-                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + response.raw());
-                mDownloadedMovies.postValue(response.body());
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
+                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
             }
 
             @Override
-            public void onFailure(Call<List<Movie>> call, Throwable t) {
-                Log.d(CLASSTAG, "CALL onFailure");
+            public void onFailure(Call<Movie> call, Throwable t) {
+                Log.d(CLASSTAG, "CALL onFailure " + t.getLocalizedMessage());
             }
         });
 
     }
 
-    public LiveData<List<Movie>> getCurrentMovies(){
+    public LiveData<List<Movie>> getCurrentMovies() {
         return mDownloadedMovies;
     }
 }

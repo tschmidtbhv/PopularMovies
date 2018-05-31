@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -35,11 +36,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        bind( mMovieList.get(position));
+        holder.title.setText(String.valueOf(position));
+        //bind(holder, mMovieList.get(position));
     }
 
-    private void bind(Movie currentMovie) {
+    private void bind(ViewHolder holder, Movie currentMovie) {
         //TODO bind related fields
+       // holder.title.setText(currentMovie.);
     }
 
     @Override
@@ -63,8 +66,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        TextView title;
+
         public ViewHolder(View itemView) {
             super(itemView);
+
+            title = itemView.findViewById(R.id.title);
         }
     }
 }

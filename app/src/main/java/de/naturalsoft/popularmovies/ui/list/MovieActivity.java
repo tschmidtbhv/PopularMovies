@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -12,6 +13,8 @@ import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
 
 public class MovieActivity extends AppCompatActivity {
+
+    private final static String CLASSNAME = MovieActivity.class.getSimpleName();
 
     @BindView(R.id.moviesRecyclerView)
 
@@ -44,7 +47,7 @@ public class MovieActivity extends AppCompatActivity {
         moviesRecyclerView.setAdapter(mMoviesAdapter);
 
         mViewModel.getmMovies().observe(this, movies -> {
-
+            Log.d(CLASSNAME, "movie observe changed");
             mMoviesAdapter.swapMovies(movies);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
             moviesRecyclerView.smoothScrollToPosition(mPosition);

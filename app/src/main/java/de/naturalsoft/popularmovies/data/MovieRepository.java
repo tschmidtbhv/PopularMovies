@@ -17,7 +17,6 @@ public class MovieRepository {
 
     private static  MovieRepository sINSTANCE;
 
-    //Todo
     private LiveData<List<Movie>> mMovies;
 
     private MovieRepository(NetworkUtil networkUtil){

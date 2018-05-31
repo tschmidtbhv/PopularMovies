@@ -28,17 +28,18 @@ ext {
     lifecycle_version = "1.1.1"
     butterknife_version = "8.8.1"
     picasso_version = "2.71828"
+    retrofit_version = "2.4.0"
+    gson_version = "2.8.4"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:27.1.1'
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 
     //Butterknife
@@ -47,6 +48,13 @@ dependencies {
 
     //Picasso
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+
+    //GSON & Converter
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

@@ -1,9 +1,10 @@
 package de.naturalsoft.popularmovies.data;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 
 import java.util.List;
+
+import de.naturalsoft.popularmovies.data.network.NetworkUtil;
 
 /**
  * PopularMovies
@@ -11,10 +12,14 @@ import java.util.List;
  */
 public class MovieRepository {
 
-    public LiveData<List<Movie>>getCurrentMovies(){
-        //TODO fill logic
+    private LiveData<List<Movie>> mMovies;
 
-        LiveData<List<Movie>> movies = new MutableLiveData<>();
-        return movies;
+    public LiveData<List<Movie>>getCurrentMovies(){
+
+        return mMovies;
+    }
+
+    private void fetchMovieService(){
+        NetworkUtil.loadMoviesForType(0);
     }
 }

@@ -3,6 +3,7 @@ package de.naturalsoft.popularmovies.data.network;
 import de.naturalsoft.popularmovies.data.MovieResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -11,9 +12,6 @@ import retrofit2.http.Query;
  */
 public interface MovieClient {
 
-    @GET("movie/popular")
-    Call<MovieResponse> getPopularMovies(@Query("api_key") String key);
-
-    @GET("/movie/top_rated")
-    Call<MovieResponse> getTopRatedMovies(@Query("api_key") String key);
+    @GET("movie/{path}")
+    Call<MovieResponse> getMovies(@Path("path") String path ,@Query("api_key") String key);
 }

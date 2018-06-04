@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sections">
+        <item>@string/popular</item>
+        <item>@string/top_rated</item>
+    </string-array>
+
+    <string-array name="sections_entryValues">
+        <item>@string/default_popular_setting</item>
+        <item>@string/default_top_rated_setting</item>
+    </string-array>
+
+</resources>

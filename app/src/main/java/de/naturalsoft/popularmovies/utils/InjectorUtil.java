@@ -11,26 +11,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 30.05.2018.
- *
+ * <p>
  * Provides static methods for injecting
  */
 
-public class InjectorUtil {
+public interface InjectorUtil {
 
 
-    public static MovieViewModelFactory provideMovieViewModelFactory(Context context) {
+    static MovieViewModelFactory provideMovieViewModelFactory(Context context) {
 
         MovieRepository movieRepository = provideMovieRepository(context.getApplicationContext(), provideRetrofit());
         return new MovieViewModelFactory(movieRepository);
     }
 
 
-    public static MovieRepository provideMovieRepository(Context context, Retrofit retrofit){
+    static MovieRepository provideMovieRepository(Context context, Retrofit retrofit) {
         NetworkUtil networkUtil = NetworkUtil.getInstance(context.getApplicationContext(), retrofit);
         return MovieRepository.getInstance(networkUtil);
     }
 
-    public static Retrofit provideRetrofit(){
+    static Retrofit provideRetrofit() {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(NetworkUtil.BASEMOVIESURL)

@@ -15,26 +15,34 @@ public class MovieRepository {
 
     private final static String CLASSTAG = MovieRepository.class.getSimpleName();
 
+    private static final Object LOCK = new Object();
     private static  MovieRepository sINSTANCE;
+    private static NetworkUtil mNetworkUtil;
 
     private LiveData<List<Movie>> mMovies;
 
     private MovieRepository(NetworkUtil networkUtil){
-        mMovies = networkUtil.getCurrentMovies();
+        mNetworkUtil = networkUtil;
+        mMovies = mNetworkUtil.getCurrentMovies();
     }
 
-    public static MovieRepository getInstance(NetworkUtil networkUtil){
+    public synchronized static MovieRepository getInstance(NetworkUtil networkUtil){
         if(sINSTANCE == null){
-            Log.d(CLASSTAG, "New MovieRepository");
-            sINSTANCE = new MovieRepository(networkUtil);
+            synchronized (LOCK) {
+                Log.d(CLASSTAG, "NewX MovieRepository");
+                sINSTANCE = new MovieRepository(networkUtil);
+            }
         }
 
         return sINSTANCE;
     }
 
     public LiveData<List<Movie>>getCurrentMovies(){
-
         return mMovies;
+    }
+
+    public void checkSettingsHasChanged(){
+        mNetworkUtil.checkSettingsHasChanged();
     }
 
 }

@@ -25,4 +25,8 @@ class MovieActivityViewModel extends ViewModel {
     public LiveData<List<Movie>> getmMovies() {
         return mMovies;
     }
+
+    public void checkSettingsHasChanged(){
+        mMovieRepository.checkSettingsHasChanged();
+    }
 }

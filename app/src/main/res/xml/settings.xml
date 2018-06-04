@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/popular"
+        android:entries="@array/sections"
+        android:entryValues="@array/sections_entryValues"
+        android:key="@string/sectionKey"
+        android:title="@string/choose_category" />
+</PreferenceScreen>

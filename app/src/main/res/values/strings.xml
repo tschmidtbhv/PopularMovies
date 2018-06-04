@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    <string name="posterImage">Poster from the loaded movie</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top rated</string>
+    <string name="default_top_rated_setting">top_rated</string>
+    <string name="default_popular_setting">popular</string>
+    <string name="choose_category">Select section</string>
+    <string name="sectionKey">sectionkey</string>
 </resources>

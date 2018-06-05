@@ -21,11 +21,11 @@ import retrofit2.Retrofit;
  * PopularMovies
  * Created by Thomas Schmidt on 30.05.2018.
  */
-public class NetworkUtil {
+public class NetworkDataSource {
 
-    private final static String CLASSTAG = NetworkUtil.class.getSimpleName();
+    private final static String CLASSTAG = NetworkDataSource.class.getSimpleName();
 
-    private static NetworkUtil sINSTANCE;
+    private static NetworkDataSource sINSTANCE;
     private static final Object LOCK = new Object();
 
     private Context mContext;
@@ -37,17 +37,17 @@ public class NetworkUtil {
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
     private static Retrofit mRetrofit;
 
-    private NetworkUtil(Context context) {
+    private NetworkDataSource(Context context) {
         mContext = context;
         mDownloadedMovies = new MutableLiveData<List<Movie>>();
     }
 
-    public synchronized static NetworkUtil getInstance(Context context, Retrofit retrofit) {
+    public synchronized static NetworkDataSource getInstance(Context context, Retrofit retrofit) {
 
         if (sINSTANCE == null) {
             synchronized (LOCK) {
                 Log.d(CLASSTAG, "NewX NetworkUtil");
-                sINSTANCE = new NetworkUtil(context.getApplicationContext());
+                sINSTANCE = new NetworkDataSource(context.getApplicationContext());
                 mRetrofit = retrofit;
             }
         }
@@ -107,7 +107,7 @@ public class NetworkUtil {
 
         String currentSetting = NetworkHelper.getSelectedType(mContext);
 
-        if (!lastSetting.equals(currentSetting)) {
+        if (!lastSetting.equals(currentSetting) || mDownloadedMovies.getValue() == null) {
             Log.d(CLASSTAG, "Settings has changed");
             loadMoviesForType(currentSetting);
             lastSetting = currentSetting;

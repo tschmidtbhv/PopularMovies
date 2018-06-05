@@ -3,7 +3,7 @@ package de.naturalsoft.popularmovies.utils;
 import android.content.Context;
 
 import de.naturalsoft.popularmovies.data.MovieRepository;
-import de.naturalsoft.popularmovies.data.network.NetworkUtil;
+import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
 import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -26,14 +26,14 @@ public interface InjectorUtil {
 
 
     static MovieRepository provideMovieRepository(Context context, Retrofit retrofit) {
-        NetworkUtil networkUtil = NetworkUtil.getInstance(context.getApplicationContext(), retrofit);
+        NetworkDataSource networkUtil = NetworkDataSource.getInstance(context.getApplicationContext(), retrofit);
         return MovieRepository.getInstance(networkUtil);
     }
 
     static Retrofit provideRetrofit() {
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(NetworkUtil.BASEMOVIESURL)
+                .baseUrl(NetworkDataSource.BASEMOVIESURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         return builder.build();

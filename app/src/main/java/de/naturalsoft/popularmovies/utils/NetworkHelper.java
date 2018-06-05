@@ -12,7 +12,10 @@ import de.naturalsoft.popularmovies.R;
  */
 public class NetworkHelper {
 
-
+    /**
+     * @param context
+     * @return
+     */
     public static String getSelectedType(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 

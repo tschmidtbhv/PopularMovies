@@ -1,7 +1,11 @@
 package de.naturalsoft.popularmovies.ui.list;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,9 +31,20 @@ public class MovieActivity extends AppCompatActivity {
     RecyclerView moviesRecyclerView;
     MoviesAdapter mMoviesAdapter;
     MovieActivityViewModel mViewModel;
+    @BindView(R.id.progressbar)
+    ProgressBar progressbar;
 
     private int mPosition = RecyclerView.NO_POSITION;
     private final static int numberOfColumns = 2;
+
+    private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mViewModel != null) {
+                mViewModel.checkSettingsHasChanged();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +56,11 @@ public class MovieActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this, factory).get(MovieActivityViewModel.class);
 
         setUpRecyclerView();
+        loadDataView();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mViewModel.checkSettingsHasChanged();
-    }
-
-    private void setUpRecyclerView() {
-
-        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
-        mMoviesAdapter = new MoviesAdapter(this);
-
-        moviesRecyclerView.setLayoutManager(layoutManager);
-        moviesRecyclerView.setHasFixedSize(true);
-        moviesRecyclerView.setAdapter(mMoviesAdapter);
+    private void loadDataView() {
+        if (mViewModel.getmMovies().getValue() == null) showLoading();
 
         mViewModel.getmMovies().observe(this, movies -> {
             Log.d(CLASSNAME, "movie observe changed");
@@ -65,6 +71,32 @@ public class MovieActivity extends AppCompatActivity {
             if (movies != null && movies.size() != 0) showMovieDataView();
             else showLoading();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter networkState = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetworkStateReceiver, networkState);
+
+        mViewModel.checkSettingsHasChanged();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mNetworkStateReceiver);
+    }
+
+    private void setUpRecyclerView() {
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
+        mMoviesAdapter = new MoviesAdapter(this);
+
+        moviesRecyclerView.setLayoutManager(layoutManager);
+        moviesRecyclerView.setHasFixedSize(true);
+        moviesRecyclerView.setAdapter(mMoviesAdapter);
     }
 
     @Override
@@ -86,8 +118,12 @@ public class MovieActivity extends AppCompatActivity {
     }
 
     private void showLoading() {
+        moviesRecyclerView.setVisibility(View.INVISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
     }
 
     private void showMovieDataView() {
+        moviesRecyclerView.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.INVISIBLE);
     }
 }

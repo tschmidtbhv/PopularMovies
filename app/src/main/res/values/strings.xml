@@ -11,4 +11,6 @@
     <string name="default_popular_setting">popular</string>
     <string name="choose_category">Select section</string>
     <string name="sectionKey">sectionkey</string>
+    <string name="releasedate">Release date:</string>
+    <string name="plotsynopsis">Plot synopsis:</string>
 </resources>

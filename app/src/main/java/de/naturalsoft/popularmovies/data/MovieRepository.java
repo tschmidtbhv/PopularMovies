@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.data.network.NetworkUtil;
+import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
 
 /**
  * PopularMovies
@@ -17,16 +17,16 @@ public class MovieRepository {
 
     private static final Object LOCK = new Object();
     private static  MovieRepository sINSTANCE;
-    private static NetworkUtil mNetworkUtil;
+    private static NetworkDataSource mNetworkDataSource;
 
     private LiveData<List<Movie>> mMovies;
 
-    private MovieRepository(NetworkUtil networkUtil){
-        mNetworkUtil = networkUtil;
-        mMovies = mNetworkUtil.getCurrentMovies();
+    private MovieRepository(NetworkDataSource networkUtil){
+        mNetworkDataSource = networkUtil;
+        mMovies = mNetworkDataSource.getCurrentMovies();
     }
 
-    public synchronized static MovieRepository getInstance(NetworkUtil networkUtil){
+    public synchronized static MovieRepository getInstance(NetworkDataSource networkUtil){
         if(sINSTANCE == null){
             synchronized (LOCK) {
                 Log.d(CLASSTAG, "NewX MovieRepository");
@@ -42,7 +42,7 @@ public class MovieRepository {
     }
 
     public void checkSettingsHasChanged(){
-        mNetworkUtil.checkSettingsHasChanged();
+        mNetworkDataSource.checkSettingsHasChanged();
     }
 
 }

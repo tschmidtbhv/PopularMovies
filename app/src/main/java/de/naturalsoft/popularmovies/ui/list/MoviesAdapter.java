@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.Movie;
-import de.naturalsoft.popularmovies.data.network.NetworkUtil;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.utils.Config;
 
@@ -25,12 +23,12 @@ import de.naturalsoft.popularmovies.utils.Config;
  * PopularMovies
  * Created by Thomas Schmidt on 30.05.2018.
  */
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Movie> mMovieList;
 
-    public MoviesAdapter(Context context){
+    public MoviesAdapter(Context context) {
         mContext = context;
     }
 
@@ -46,29 +44,32 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Movie movie = mMovieList.get(position);
-        Picasso.get().load("https://image.tmdb.org/t/p/w185_and_h278_bestv2" + movie.getPoster_path()).into(holder.poster);
+        Picasso.get().load("https://image.tmdb.org/t/p/w185_and_h278_bestv2" + movie.getPoster_path())
+                .placeholder(mContext.getResources().getDrawable(R.drawable.poster_not_available))
+                .into(holder.poster);
     }
 
     @Override
     public int getItemCount() {
-        if(mMovieList == null)return 0;
+        if (mMovieList == null) return 0;
 
         return mMovieList.size();
     }
 
     /**
      * Swap the given Movies
+     *
      * @param movieList loaded movies
      */
-    public void swapMovies(final List<Movie> movieList){
+    public void swapMovies(final List<Movie> movieList) {
 
-        if(movieList != null){
+        if (movieList != null) {
             mMovieList = movieList;
             notifyDataSetChanged();
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         Context context;
         ImageView poster;

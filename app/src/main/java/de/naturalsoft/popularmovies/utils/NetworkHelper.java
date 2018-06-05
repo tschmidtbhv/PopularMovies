@@ -21,27 +21,36 @@ public interface NetworkHelper {
 
     /**
      * Build the ImagePath URI
+     *
      * @param imagePath poster path
      * @return Poster Uri
      */
-    static Uri getImageURI(String imagePath){
+    static Uri getImageURI(String imagePath, String optImageWidth) {
 
-        Uri imageUri = Uri.parse(NetworkDataSource.BASEIMAGEURL).buildUpon()
-                .appendPath(imageWidth)
-                .appendEncodedPath(imagePath)
+
+        Uri.Builder imageUri = Uri.parse(NetworkDataSource.BASEIMAGEURL).buildUpon();
+
+        if (optImageWidth == null) {
+            imageUri.appendPath(imageWidth);
+        } else {
+            imageUri.appendPath(optImageWidth);
+        }
+
+        imageUri.appendEncodedPath(imagePath)
                 .build();
 
-        Log.d("TAG", "PATH: " +imageUri.toString());
-        return imageUri;
+        Log.d("TAG", "PATH: " + imageUri.toString());
+        return imageUri.build();
     }
 
     /**
      * Check the connectionstate
+     *
      * @param context
      * @return
      */
-    static boolean checkConnectivityState(Context context){
-        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    static boolean checkConnectivityState(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }

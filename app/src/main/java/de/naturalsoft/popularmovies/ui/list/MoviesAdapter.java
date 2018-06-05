@@ -18,6 +18,7 @@ import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.Movie;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.utils.Config;
+import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 /**
  * PopularMovies
@@ -44,7 +45,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Movie movie = mMovieList.get(position);
-        Picasso.get().load("https://image.tmdb.org/t/p/w185_and_h278_bestv2" + movie.getPoster_path())
+        Picasso.get().load(NetworkHelper.getImageURI(movie.getPoster_path(), mContext.getString(R.string.default_poster_size)))
                 .placeholder(mContext.getResources().getDrawable(R.drawable.poster_not_available))
                 .into(holder.poster);
     }

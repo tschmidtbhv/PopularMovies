@@ -57,9 +57,15 @@ public class NetworkDataSource {
         return sINSTANCE;
     }
 
-    private static String getMOVIESKEY() throws NoKeyError{
+    /**
+     * Check the given MoviesKey is not an empty
+     *
+     * @return MoviesKey
+     * @throws NoKeyError
+     */
+    private static String getMOVIESKEY() throws NoKeyError {
 
-        if(MOVIESKEY.equals(""))throw new NoKeyError();
+        if (MOVIESKEY.isEmpty()) throw new NoKeyError();
 
         return MOVIESKEY;
     }
@@ -79,7 +85,7 @@ public class NetworkDataSource {
             if (call != null) doCall(call);
         } catch (NullPointerException e) {
             Log.e(CLASSTAG, "Nullpointer while executing call " + e);
-        }catch (NoKeyError e){
+        } catch (NoKeyError e) {
             Log.e(CLASSTAG, "Please create and add your API Key. Currentkey value is " + e.getMessage());
         }
 
@@ -107,6 +113,11 @@ public class NetworkDataSource {
         });
     }
 
+    /**
+     * Get the current Movies
+     *
+     * @return LiveData List for Movies
+     */
     public LiveData<List<Movie>> getCurrentMovies() {
         return mDownloadedMovies;
     }

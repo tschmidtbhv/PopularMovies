@@ -47,9 +47,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set and load the Moviedetails into views
+     *
+     * @param movie the selected movie
+     */
     private void loadMovieDetails(Movie movie) {
         Picasso.get()
-                .load(NetworkHelper.getImageURI(movie.getPoster_path()))
+                .load(NetworkHelper.getImageURI(movie.getPoster_path(),null))
                 .placeholder(getResources().getDrawable(R.drawable.poster_not_available))
                 .into(poster);
 
@@ -59,10 +64,16 @@ public class MovieDetailActivity extends AppCompatActivity {
         ratingBar.setNumStars(10);
         ratingBar.setRating(Float.parseFloat(movie.getVote_average()));
         releasedateTextView.setText(movie.getRelease_date());
-        String text = movie.getOverview() + movie.getOverview() + movie.getOverview()+ movie.getOverview();
+        String text = movie.getOverview() + movie.getOverview() + movie.getOverview() + movie.getOverview();
         plotTextView.setText(text);
     }
 
+    /**
+     * Extract Movie from the Bundle
+     * and returns the Movie Obj
+     * @param extras Bundle
+     * @return Movie Object
+     */
     private Movie getMovie(Bundle extras) {
         Gson gson = new Gson();
         String jsonString = extras.getString(Config.MOVIEKEY);

@@ -60,6 +60,12 @@ public class MovieActivity extends AppCompatActivity {
         loadDataView();
     }
 
+    /**
+     * Shows loading if the given
+     * LiveData Values are null
+     * <p>
+     * Set the observer for that LiveData
+     */
     private void loadDataView() {
         if (mViewModel.getmMovies().getValue() == null) showLoading();
 
@@ -90,6 +96,9 @@ public class MovieActivity extends AppCompatActivity {
         unregisterReceiver(mNetworkStateReceiver);
     }
 
+    /**
+     * Initial Setup for RecyclerView
+     */
     private void setUpRecyclerView() {
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);

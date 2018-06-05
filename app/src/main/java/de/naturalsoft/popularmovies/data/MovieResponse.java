@@ -5,6 +5,8 @@ import java.util.List;
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 31.05.2018.
+ *
+ * MovieResponse includes Movies
  */
 public class MovieResponse {
 

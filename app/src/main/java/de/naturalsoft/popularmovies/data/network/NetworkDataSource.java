@@ -78,9 +78,9 @@ public class NetworkDataSource {
 
             if (call != null) doCall(call);
         } catch (NullPointerException e) {
-            Log.d(CLASSTAG, "Nullpointer while executing call " + e);
+            Log.e(CLASSTAG, "Nullpointer while executing call " + e);
         }catch (NoKeyError e){
-            Log.d(CLASSTAG, "Please create and add your API Key");
+            Log.e(CLASSTAG, "Please create and add your API Key. Currentkey value is " + e.getMessage());
         }
 
     }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.naturalsoft.popularmovies.data.Movie;
 import de.naturalsoft.popularmovies.data.MovieResponse;
+import de.naturalsoft.popularmovies.error.NoKeyError;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +33,7 @@ public class NetworkDataSource {
     private static String lastSetting = "";
 
     public final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
+    public final static String BASEIMAGEURL = "https://image.tmdb.org/t/p/";
     private final static String MOVIESKEY = ""; //TODO you need to set the API Key here
 
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
@@ -55,6 +57,13 @@ public class NetworkDataSource {
         return sINSTANCE;
     }
 
+    private static String getMOVIESKEY() throws NoKeyError{
+
+        if(MOVIESKEY.equals(""))throw new NoKeyError();
+
+        return MOVIESKEY;
+    }
+
     /**
      * Load movies for a Type
      *
@@ -62,13 +71,16 @@ public class NetworkDataSource {
      */
     public static void loadMoviesForType(String type) {
 
-        MovieClient client = mRetrofit.create(MovieClient.class);
-        Call<MovieResponse> call = client.getMovies(type, MOVIESKEY);
-
         try {
+
+            MovieClient client = mRetrofit.create(MovieClient.class);
+            Call<MovieResponse> call = client.getMovies(type, getMOVIESKEY());
+
             if (call != null) doCall(call);
         } catch (NullPointerException e) {
             Log.d(CLASSTAG, "Nullpointer while executing call " + e);
+        }catch (NoKeyError e){
+            Log.d(CLASSTAG, "Please create and add your API Key");
         }
 
     }

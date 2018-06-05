@@ -14,6 +14,18 @@
         <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
     </style>
 
+    <style name="AppTheme.DefaultText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginLeft">@dimen/stdmargin</item>
+        <item name="android:layout_marginStart">@dimen/stdmargin</item>
+    </style>
+
+    <style name="AppTheme.DefaultHeaderText" parent="AppTheme.DefaultText">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

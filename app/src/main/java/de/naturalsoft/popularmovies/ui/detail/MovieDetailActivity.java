@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.Movie;
 import de.naturalsoft.popularmovies.utils.Config;
+import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -48,13 +49,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void loadMovieDetails(Movie movie) {
         Picasso.get()
-                .load("https://image.tmdb.org/t/p/w185_and_h278_bestv2" + movie.getPoster_path())
+                .load(NetworkHelper.getImageURI(movie.getPoster_path()))
                 .placeholder(getResources().getDrawable(R.drawable.poster_not_available))
                 .into(poster);
 
         getSupportActionBar().setTitle(movie.getTitle());
 
-        Log.d("TAG", "Movie ID " + movie.getId());
+        Log.d("TAG", "Movie ID " + movie.getId() + " MOVIE IMAGEPATH " + movie.getPoster_path());
         ratingBar.setNumStars(10);
         ratingBar.setRating(Float.parseFloat(movie.getVote_average()));
         releasedateTextView.setText(movie.getRelease_date());

@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.ui.setting.SettingsActivity;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
+import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class MovieActivity extends AppCompatActivity {
     private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mViewModel != null) {
+            if (NetworkHelper.checkConnectivityState(MovieActivity.this) && mViewModel != null) {
                 mViewModel.checkSettingsHasChanged();
             }
         }

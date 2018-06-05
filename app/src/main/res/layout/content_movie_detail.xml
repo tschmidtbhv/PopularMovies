@@ -10,10 +10,9 @@
 
     <TextView
         android:id="@+id/releaseText"
+        style="@style/AppTheme.DefaultHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/releasedate"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,10 +20,9 @@
 
     <TextView
         android:id="@+id/plotText"
+        style="@style/AppTheme.DefaultHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/plotsynopsis"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,12 +42,11 @@
 
     <TextView
         android:id="@+id/releasedateTextView"
+        style="@style/AppTheme.DefaultText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,13 +54,12 @@
 
     <TextView
         android:id="@+id/plotTextView"
+        style="@style/AppTheme.DefaultText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

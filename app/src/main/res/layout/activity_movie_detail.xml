@@ -11,12 +11,13 @@
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
-            app:contentScrim="@color/colorAccent"
+            app:contentScrim="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
+                android:contentDescription="@string/posterImage"
                 android:id="@+id/poster"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -38,7 +39,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@color/colorBackGround"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 

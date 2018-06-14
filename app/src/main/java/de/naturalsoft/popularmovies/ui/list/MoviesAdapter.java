@@ -2,7 +2,9 @@ package de.naturalsoft.popularmovies.ui.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
-import de.naturalsoft.popularmovies.data.Movie;
+import de.naturalsoft.popularmovies.data.database.Movie;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.utils.Config;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
@@ -28,9 +30,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     private Context mContext;
     private List<Movie> mMovieList;
+    private OnAdapterListener listener;
 
     public MoviesAdapter(Context context) {
         mContext = context;
+        listener = (OnAdapterListener) context;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        Drawable drawable = mContext.getResources().getDrawable(R.drawable.poster_not_available);
+
+        Movie movie = mMovieList.get(position);
+        Picasso.get().load(NetworkHelper.getImageURI(movie.getPoster_path(), mContext.getString(R.string.default_poster_size)))
+                .placeholder(drawable)
+                .error(drawable)
+                .into(holder.poster);
     }
 
     @NonNull
@@ -41,13 +57,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        Movie movie = mMovieList.get(position);
-        Picasso.get().load(NetworkHelper.getImageURI(movie.getPoster_path(), mContext.getString(R.string.default_poster_size)))
-                .placeholder(mContext.getResources().getDrawable(R.drawable.poster_not_available))
-                .into(holder.poster);
+    public interface OnAdapterListener {
+        void showDetailsActivity(ImageView imageView, String gsonString);
     }
 
     @Override
@@ -80,15 +91,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             poster = itemView.findViewById(R.id.poster);
             context = itemView.getContext();
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Gson gson = new Gson();
-                    Intent intent = new Intent(context, MovieDetailActivity.class);
-                    intent.putExtra(Config.MOVIEKEY, gson.toJson(mMovieList.get(getAdapterPosition())));
-                    context.startActivity(intent);
-                }
-            });
+            itemView.setOnClickListener(view ->
+                    listener.showDetailsActivity(poster, new Gson().toJson(mMovieList.get(getAdapterPosition())))
+            );
         }
     }
 }

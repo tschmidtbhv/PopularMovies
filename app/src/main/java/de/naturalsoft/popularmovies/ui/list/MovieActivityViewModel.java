@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.data.Movie;
 import de.naturalsoft.popularmovies.data.MovieRepository;
+import de.naturalsoft.popularmovies.data.database.Movie;
 
 /**
  * PopularMovies
@@ -17,16 +17,24 @@ class MovieActivityViewModel extends ViewModel {
     private final MovieRepository mMovieRepository;
     private final LiveData<List<Movie>> mMovies;
 
-    public MovieActivityViewModel(MovieRepository repository){
+    public MovieActivityViewModel(MovieRepository repository) {
         mMovieRepository = repository;
         mMovies = repository.getCurrentMovies();
     }
 
-    public LiveData<List<Movie>> getmMovies() {
+    public LiveData<List<Movie>> getMoviesByType(String type) {
+        return mMovieRepository.getMoviesByType(type);
+    }
+
+    public LiveData<List<Movie>> getCurrentMovies() {
         return mMovies;
     }
 
-    public void checkSettingsHasChanged(){
+    public void checkSettingsHasChanged() {
         mMovieRepository.checkSettingsHasChanged();
+    }
+
+    public void loadMoviesByType(String type) {
+        mMovieRepository.loadMoviesByType(type);
     }
 }

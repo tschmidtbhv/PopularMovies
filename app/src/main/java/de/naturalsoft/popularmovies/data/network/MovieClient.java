@@ -1,6 +1,6 @@
 package de.naturalsoft.popularmovies.data.network;
 
-import de.naturalsoft.popularmovies.data.MovieResponse;
+import de.naturalsoft.popularmovies.data.database.MovieResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

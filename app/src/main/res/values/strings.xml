@@ -14,4 +14,8 @@
     <string name="releasedate">Release date:</string>
     <string name="plotsynopsis">Plot synopsis:</string>
     <string name="default_poster_size">w185_and_h278_bestv2</string>
+
+    <!--Shared transition name-->
+    <string name="poster_transition_name">poster</string>
+    <string name="bookmark">bookmark</string>
 </resources>

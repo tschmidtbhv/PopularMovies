@@ -1,5 +1,6 @@
 package de.naturalsoft.popularmovies.ui.list;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,18 +16,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
+import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivity;
+import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.ui.setting.SettingsActivity;
+import de.naturalsoft.popularmovies.utils.Config;
+import de.naturalsoft.popularmovies.utils.DataHelper;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
-public class MovieActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity implements MoviesAdapter.OnAdapterListener {
 
     private final static String CLASSNAME = MovieActivity.class.getSimpleName();
+    private static String lastSetting = "";
 
     @BindView(R.id.moviesRecyclerView)
 
@@ -37,6 +48,18 @@ public class MovieActivity extends AppCompatActivity {
 
     private int mPosition = RecyclerView.NO_POSITION;
     private final static int numberOfColumns = 2;
+
+
+    private Observer<List<Movie>> observer = movies -> {
+
+        Log.d(CLASSNAME, "movie observe changed");
+        mMoviesAdapter.swapMovies(movies);
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        moviesRecyclerView.smoothScrollToPosition(mPosition);
+
+        if (movies != null && movies.size() != 0) showMovieDataView();
+        else showLoading();
+    };
 
     private final BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
         @Override
@@ -67,17 +90,11 @@ public class MovieActivity extends AppCompatActivity {
      * Set the observer for that LiveData
      */
     private void loadDataView() {
-        if (mViewModel.getmMovies().getValue() == null) showLoading();
 
-        mViewModel.getmMovies().observe(this, movies -> {
-            Log.d(CLASSNAME, "movie observe changed");
-            mMoviesAdapter.swapMovies(movies);
-            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-            moviesRecyclerView.smoothScrollToPosition(mPosition);
+        lastSetting = DataHelper.getSelectedType(this);
 
-            if (movies != null && movies.size() != 0) showMovieDataView();
-            else showLoading();
-        });
+        //mViewModel.getMoviesByType(lastSetting).observe(this,observer);
+        mViewModel.getCurrentMovies().observe(this, observer);
     }
 
     @Override
@@ -87,7 +104,7 @@ public class MovieActivity extends AppCompatActivity {
         IntentFilter networkState = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkStateReceiver, networkState);
 
-        mViewModel.checkSettingsHasChanged();
+        //mViewModel.checkSettingsHasChanged();
     }
 
     @Override
@@ -112,10 +129,19 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(MovieActivity.this, SettingsActivity.class);
-            startActivity(intent);
+        Intent intent = null;
+        switch (item.getItemId()) {
+
+            case R.id.settings:
+                intent = new Intent(MovieActivity.this, SettingsActivity.class);
+                break;
+
+            case R.id.bookmark:
+                intent = new Intent(MovieActivity.this, BookmarkActivity.class);
+                break;
         }
+
+        if (intent != null) startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }
@@ -136,4 +162,12 @@ public class MovieActivity extends AppCompatActivity {
         moviesRecyclerView.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.INVISIBLE);
     }
+
+    @Override
+    public void showDetailsActivity(ImageView imageView, String gsonString) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(Config.MOVIEKEY, gsonString);
+        startActivity(intent);
+    }
+
 }

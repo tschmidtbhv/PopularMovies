@@ -2,7 +2,9 @@ package de.naturalsoft.popularmovies.utils;
 
 import android.content.Context;
 
+import de.naturalsoft.popularmovies.AppExecutors;
 import de.naturalsoft.popularmovies.data.MovieRepository;
+import de.naturalsoft.popularmovies.data.database.MovieDatabase;
 import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
 import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
 import retrofit2.Retrofit;
@@ -26,8 +28,11 @@ public interface InjectorUtil {
 
 
     static MovieRepository provideMovieRepository(Context context, Retrofit retrofit) {
+
+        MovieDatabase database = MovieDatabase.getInstance(context.getApplicationContext());
+        AppExecutors appExecutors = AppExecutors.getInstance();
         NetworkDataSource networkUtil = NetworkDataSource.getInstance(context.getApplicationContext(), retrofit);
-        return MovieRepository.getInstance(networkUtil);
+        return MovieRepository.getInstance(database.movieDao(), networkUtil, appExecutors);
     }
 
     static Retrofit provideRetrofit() {

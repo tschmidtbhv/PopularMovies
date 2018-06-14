@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
-import de.naturalsoft.popularmovies.data.Movie;
+import de.naturalsoft.popularmovies.data.database.Movie;
 import de.naturalsoft.popularmovies.utils.Config;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 

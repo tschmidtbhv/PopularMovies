@@ -24,13 +24,14 @@ android {
     }
 }
 ext {
-    support_version = "27.1.0"
-    constraint_layout_version = "1.1.0"
+    support_version = "27.1.1"
+    constraint_layout_version = "1.1.1"
     lifecycle_version = "1.1.1"
     butterknife_version = "8.8.1"
     picasso_version = "2.71828"
     retrofit_version = "2.4.0"
     gson_version = "2.8.4"
+    room_version = "1.1.0"
 }
 
 dependencies {
@@ -39,11 +40,14 @@ dependencies {
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
 
+    // ROOM
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:support-vector-drawable:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation "com.android.support:support-v4:$support_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 
     //Butterknife

@@ -9,9 +9,10 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.data.Movie;
-import de.naturalsoft.popularmovies.data.MovieResponse;
+import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.data.database.MovieResponse;
 import de.naturalsoft.popularmovies.error.NoKeyError;
+import de.naturalsoft.popularmovies.utils.DataHelper;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +64,7 @@ public class NetworkDataSource {
      * @return MoviesKey
      * @throws NoKeyError
      */
-    private static String getMOVIESKEY() throws NoKeyError {
+    private static String getMovieskey() throws NoKeyError {
 
         if (MOVIESKEY.isEmpty()) throw new NoKeyError();
 
@@ -80,7 +81,7 @@ public class NetworkDataSource {
         try {
 
             MovieClient client = mRetrofit.create(MovieClient.class);
-            Call<MovieResponse> call = client.getMovies(type, getMOVIESKEY());
+            Call<MovieResponse> call = client.getMovies(type, getMovieskey());
 
             if (call != null) doCall(call);
         } catch (NullPointerException e) {
@@ -128,7 +129,7 @@ public class NetworkDataSource {
      */
     public void checkSettingsHasChanged() {
 
-        String currentSetting = NetworkHelper.getSelectedType(mContext);
+        String currentSetting = DataHelper.getSelectedType(mContext);
 
         if (!lastSetting.equals(currentSetting) || mDownloadedMovies.getValue() == null) {
             Log.d(CLASSTAG, "Settings has changed");

@@ -55,15 +55,5 @@ public interface NetworkHelper {
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
-    /**
-     * @param context
-     * @return
-     */
-    static String getSelectedType(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String key = context.getString(R.string.sectionKey);
-        String defValue = context.getString(R.string.default_popular_setting);
-        return sharedPreferences.getString(key, defValue);
-    }
 }

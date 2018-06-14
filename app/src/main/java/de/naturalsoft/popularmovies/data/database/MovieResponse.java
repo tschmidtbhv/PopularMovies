@@ -1,4 +1,4 @@
-package de.naturalsoft.popularmovies.data;
+package de.naturalsoft.popularmovies.data.database;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class MovieResponse {
 
-    List<Movie> results;
+    private List<Movie> results;
 
     private String page;
     private String total_pages;

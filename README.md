@@ -1,4 +1,4 @@
-# PopularMovies Stage 1 (In Review)
+# PopularMovies Stage 2 (Work in Progress)
 
 - Popular Movies app for Udacity Android Developer Nanodegree
 - This app retrieves data from [The Movie DB](https://www.themoviedb.org)

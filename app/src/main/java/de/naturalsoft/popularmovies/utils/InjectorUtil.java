@@ -1,5 +1,6 @@
 package de.naturalsoft.popularmovies.utils;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
 import de.naturalsoft.popularmovies.AppExecutors;
@@ -20,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public interface InjectorUtil {
 
 
-    static MovieViewModelFactory provideMovieViewModelFactory(Context context) {
+    static <T> ViewModelProvider.NewInstanceFactory provideMovieViewModelFactory(Context context) {
 
         MovieRepository movieRepository = provideMovieRepository(context.getApplicationContext(), provideRetrofit());
         return new MovieViewModelFactory(movieRepository);

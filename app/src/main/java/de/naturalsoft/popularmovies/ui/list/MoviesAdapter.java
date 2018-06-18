@@ -1,10 +1,8 @@
 package de.naturalsoft.popularmovies.ui.list;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,6 @@ import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.database.Movie;
-import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
-import de.naturalsoft.popularmovies.utils.Config;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 /**

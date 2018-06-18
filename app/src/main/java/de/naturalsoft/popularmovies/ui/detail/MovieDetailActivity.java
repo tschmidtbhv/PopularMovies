@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.database.Movie;
-import de.naturalsoft.popularmovies.utils.Config;
+import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -76,7 +76,7 @@ public class MovieDetailActivity extends AppCompatActivity {
      */
     private Movie getMovie(Bundle extras) {
         Gson gson = new Gson();
-        String jsonString = extras.getString(Config.MOVIEKEY);
+        String jsonString = extras.getString(Constants.MOVIEKEY);
         return gson.fromJson(jsonString, Movie.class);
     }
 

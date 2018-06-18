@@ -22,7 +22,6 @@ public class MovieRepository {
     private static MovieRepository sINSTANCE;
     private static NetworkDataSource mNetworkDataSource;
     private static MovieDao mMovieDao;
-    private static String mType;
     private final AppExecutors mExecutors;
 
 
@@ -44,43 +43,30 @@ public class MovieRepository {
         return sINSTANCE;
     }
 
-    private static void insertMovieWithType(List<Movie> movies, String type) {
-
-        for (Movie movie : movies) {
-            movie.setType(type);
-        }
-
-        mMovieDao.insertMovies(movies);
-    }
-
     private void settingObserver() {
         LiveData<List<Movie>> movies = mNetworkDataSource.getCurrentMovies();
         movies.observeForever(moviesFromNetwork -> {
             mExecutors.getDiskIO().execute(() -> {
-                deleteOldData(movies);
-                insertMovieWithType(moviesFromNetwork, mType);
+                deleteOldData();
+                mMovieDao.insertMovies(moviesFromNetwork);
             });
         });
     }
 
-    private void deleteOldData(LiveData<List<Movie>> movies) {
-        mMovieDao.deleteMovies();
+    private void deleteOldData() {
+        mMovieDao.deleteAllNoFavsMovies();
     }
 
-    public LiveData<List<Movie>> getMoviesByType(String type) {
-        mType = type;
-        return mMovieDao.getMoviesByType(mType);
-    }
 
     public LiveData<List<Movie>> getCurrentMovies() {
         return mMovieDao.getAllMovies();
     }
 
-    public void loadMoviesByType(String type) {
-        mNetworkDataSource.loadMoviesForType(type);
-    }
-
     public void checkSettingsHasChanged() {
         mNetworkDataSource.checkSettingsHasChanged();
+    }
+
+    public LiveData<List<Movie>> getCurrentFavorites() {
+        return mMovieDao.getFavoriteMovies();
     }
 }

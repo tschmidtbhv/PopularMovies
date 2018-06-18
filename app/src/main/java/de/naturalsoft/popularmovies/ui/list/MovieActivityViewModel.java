@@ -12,18 +12,16 @@ import de.naturalsoft.popularmovies.data.database.Movie;
  * PopularMovies
  * Created by Thomas Schmidt on 30.05.2018.
  */
-class MovieActivityViewModel extends ViewModel {
+public class MovieActivityViewModel extends ViewModel {
 
     private final MovieRepository mMovieRepository;
     private final LiveData<List<Movie>> mMovies;
+    private final LiveData<List<Movie>> favorites;
 
     public MovieActivityViewModel(MovieRepository repository) {
         mMovieRepository = repository;
         mMovies = repository.getCurrentMovies();
-    }
-
-    public LiveData<List<Movie>> getMoviesByType(String type) {
-        return mMovieRepository.getMoviesByType(type);
+        favorites = repository.getCurrentFavorites();
     }
 
     public LiveData<List<Movie>> getCurrentMovies() {
@@ -34,7 +32,7 @@ class MovieActivityViewModel extends ViewModel {
         mMovieRepository.checkSettingsHasChanged();
     }
 
-    public void loadMoviesByType(String type) {
-        mMovieRepository.loadMoviesByType(type);
+    public LiveData<List<Movie>> getFavoriteMovies() {
+        return favorites;
     }
 }

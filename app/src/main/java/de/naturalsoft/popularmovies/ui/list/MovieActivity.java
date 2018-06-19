@@ -21,11 +21,10 @@ public class MovieActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetworkHelper.checkConnectivityState(MovieActivity.this) && getViewModel() != null) {
-                getViewModel().checkSettingsHasChanged();
+                ((MovieActivityViewModel) getViewModel()).checkSettingsHasChanged();
             }
         }
     };
-
 
     @Override
     protected void onResume() {

@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Dao
 public interface MovieDao {
 
-    @Query("SELECT * FROM movie")
+    @Query("SELECT * FROM movie WHERE isFavorite = 0")
     LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movie WHERE isFavorite = 1")
@@ -24,13 +25,12 @@ public interface MovieDao {
     @Query("SELECT * FROM movie WHERE id = :id")
     LiveData<Movie> getMovieById(int id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMovies(List<Movie> movies);
-
-    @Query("DELETE FROM movie")
-    void deleteMovies();
 
     @Query("DELETE FROM movie WHERE isFavorite = 0")
     void deleteAllNoFavsMovies();
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateMovie(Movie movie);
 }

@@ -16,12 +16,10 @@ public class MovieActivityViewModel extends ViewModel {
 
     private final MovieRepository mMovieRepository;
     private final LiveData<List<Movie>> mMovies;
-    private final LiveData<List<Movie>> favorites;
 
     public MovieActivityViewModel(MovieRepository repository) {
         mMovieRepository = repository;
         mMovies = repository.getCurrentMovies();
-        favorites = repository.getCurrentFavorites();
     }
 
     public LiveData<List<Movie>> getCurrentMovies() {
@@ -30,9 +28,5 @@ public class MovieActivityViewModel extends ViewModel {
 
     public void checkSettingsHasChanged() {
         mMovieRepository.checkSettingsHasChanged();
-    }
-
-    public LiveData<List<Movie>> getFavoriteMovies() {
-        return favorites;
     }
 }

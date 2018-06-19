@@ -1,24 +1,31 @@
 package de.naturalsoft.popularmovies.ui.detail;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
+import de.naturalsoft.popularmovies.utils.InjectorUtil;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
 public class MovieDetailActivity extends AppCompatActivity {
+
+    MovieDetailViewModel mViewModel;
 
     @BindView(R.id.poster)
     ImageView poster;
@@ -30,6 +37,18 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView releasedateTextView;
     @BindView(R.id.plotTextView)
     TextView plotTextView;
+    @BindView(R.id.isFavorite)
+    CheckBox isFavorite;
+
+
+    private Movie mMovie;
+
+    private Observer<Movie> observer = movie -> {
+        if (movie != null) {
+            mMovie = movie;
+            loadMovieDetails(movie);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +61,16 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Movie movie = getMovie(extras);
-            loadMovieDetails(movie);
+
+            MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
+            mViewModel = ViewModelProviders.of(this, factory).get(MovieDetailViewModel.class);
+            mViewModel.getMovieById(extras.getInt(Constants.MOVIEKEY)).observe(this, observer);
+            isFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateMovie();
+                }
+            });
         }
     }
 
@@ -54,7 +81,7 @@ public class MovieDetailActivity extends AppCompatActivity {
      */
     private void loadMovieDetails(Movie movie) {
         Picasso.get()
-                .load(NetworkHelper.getImageURI(movie.getPoster_path(),null))
+                .load(NetworkHelper.getImageURI(movie.getPoster_path(), null))
                 .placeholder(getResources().getDrawable(R.drawable.poster_not_available))
                 .into(poster);
 
@@ -68,16 +95,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         plotTextView.setText(text);
     }
 
-    /**
-     * Extract Movie from the Bundle
-     * and returns the Movie Obj
-     * @param extras Bundle
-     * @return Movie Object
-     */
-    private Movie getMovie(Bundle extras) {
-        Gson gson = new Gson();
-        String jsonString = extras.getString(Constants.MOVIEKEY);
-        return gson.fromJson(jsonString, Movie.class);
+    private void updateMovie() {
+        if (mMovie != null) {
+            mMovie.setFavorite(isFavorite.isChecked());
+            mViewModel.updateMovie(mMovie);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package de.naturalsoft.popularmovies.ui;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,11 +19,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivity;
+import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivityViewModel;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivityViewModel;
-import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.ui.list.MoviesAdapter;
+import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.DataHelper;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
@@ -40,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
 
     RecyclerView moviesRecyclerView;
     MoviesAdapter mMoviesAdapter;
-    MovieActivityViewModel mViewModel;
+    ViewModel mViewModel;
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -62,7 +65,11 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
         ButterKnife.bind(this);
 
         MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
-        mViewModel = ViewModelProviders.of(this, factory).get(MovieActivityViewModel.class);
+        if (getClass().isAssignableFrom(MovieActivity.class)) {
+            mViewModel = ViewModelProviders.of(this, factory).get(MovieActivityViewModel.class);
+        } else if (getClass().isAssignableFrom(BookmarkActivity.class)) {
+            mViewModel = ViewModelProviders.of(this, factory).get(BookmarkActivityViewModel.class);
+        }
 
         setUpRecyclerView();
         loadDataView();
@@ -78,12 +85,11 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
 
         lastSetting = DataHelper.getSelectedType(this);
 
-        //mViewModel.getMoviesByType(lastSetting).observe(this,observer);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mViewModel.getFavoriteMovies().observe(this, observer);
+            ((BookmarkActivityViewModel) mViewModel).getFavoriteMovies().observe(this, observer);
         } else {
-            mViewModel.getCurrentMovies().observe(this, observer);
+            ((MovieActivityViewModel) mViewModel).getCurrentMovies().observe(this, observer);
         }
     }
 
@@ -101,6 +107,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
     }
 
     private void showLoading() {
+
+        if (getClass().isAssignableFrom(BookmarkActivity.class)) return;
+
         moviesRecyclerView.setVisibility(View.INVISIBLE);
         progressbar.setVisibility(View.VISIBLE);
     }
@@ -110,14 +119,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
         progressbar.setVisibility(View.INVISIBLE);
     }
 
-    public MovieActivityViewModel getViewModel() {
-        return mViewModel;
+    public <T extends ViewModel> T getViewModel() {
+        return (T) mViewModel;
     }
 
     @Override
-    public void showDetailsActivity(ImageView imageView, String gsonString) {
+    public void showDetailsActivity(ImageView imageView, int movieId) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(Constants.MOVIEKEY, gsonString);
+        intent.putExtra(Constants.MOVIEKEY, movieId);
         startActivity(intent);
     }
 }

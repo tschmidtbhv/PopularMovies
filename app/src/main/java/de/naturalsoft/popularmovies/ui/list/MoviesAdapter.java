@@ -54,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     public interface OnAdapterListener {
-        void showDetailsActivity(ImageView imageView, String gsonString);
+        void showDetailsActivity(ImageView imageView, int movieId);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             context = itemView.getContext();
 
             itemView.setOnClickListener(view ->
-                    listener.showDetailsActivity(poster, new Gson().toJson(mMovieList.get(getAdapterPosition())))
+                    listener.showDetailsActivity(poster, ((Movie) mMovieList.get(getAdapterPosition())).getId())
             );
         }
     }

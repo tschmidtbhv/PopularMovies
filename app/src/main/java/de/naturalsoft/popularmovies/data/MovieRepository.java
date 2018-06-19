@@ -62,11 +62,21 @@ public class MovieRepository {
         return mMovieDao.getAllMovies();
     }
 
+    public LiveData<Movie> getMovieById(int id) {
+        return mMovieDao.getMovieById(id);
+    }
+
     public void checkSettingsHasChanged() {
         mNetworkDataSource.checkSettingsHasChanged();
     }
 
     public LiveData<List<Movie>> getCurrentFavorites() {
         return mMovieDao.getFavoriteMovies();
+    }
+
+    public void updateMoview(Movie movie) {
+        mExecutors.getDiskIO().execute(() -> {
+            mMovieDao.updateMovie(movie);
+        });
     }
 }

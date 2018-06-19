@@ -7,7 +7,7 @@ import de.naturalsoft.popularmovies.AppExecutors;
 import de.naturalsoft.popularmovies.data.MovieRepository;
 import de.naturalsoft.popularmovies.data.database.MovieDatabase;
 import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
-import de.naturalsoft.popularmovies.ui.list.MovieViewModelFactory;
+import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

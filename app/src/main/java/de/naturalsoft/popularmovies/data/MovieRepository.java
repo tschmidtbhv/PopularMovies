@@ -79,4 +79,8 @@ public class MovieRepository {
             mMovieDao.updateMovie(movie);
         });
     }
+
+    public void loadTrailerById(int id) {
+        mNetworkDataSource.loadMoviesForType(id, "trailer");
+    }
 }

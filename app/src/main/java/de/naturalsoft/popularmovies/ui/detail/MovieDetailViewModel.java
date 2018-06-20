@@ -25,4 +25,8 @@ public class MovieDetailViewModel extends ViewModel {
     public void updateMovie(Movie movie) {
         movieRepository.updateMoview(movie);
     }
+
+    public void loadTrailerById(int id) {
+        movieRepository.loadTrailerById(id);
+    }
 }

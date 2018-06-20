@@ -3,6 +3,7 @@ package de.naturalsoft.popularmovies.utils;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
+import de.naturalsoft.popularmovies.utils.Constants.BuildConfig;
 import de.naturalsoft.popularmovies.AppExecutors;
 import de.naturalsoft.popularmovies.data.MovieRepository;
 import de.naturalsoft.popularmovies.data.database.MovieDatabase;
@@ -39,7 +40,7 @@ public interface InjectorUtil {
     static Retrofit provideRetrofit() {
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(NetworkDataSource.BASEMOVIESURL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         return builder.build();

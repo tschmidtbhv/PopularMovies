@@ -3,10 +3,11 @@ package de.naturalsoft.popularmovies.ui.detail;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -39,11 +40,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView plotTextView;
     @BindView(R.id.isFavorite)
     CheckBox isFavorite;
+    @BindView(R.id.trailerRecycler)
+    RecyclerView trailerRecycler;
+    @BindView(R.id.reviewRecycler)
+    RecyclerView reviewRecycler;
 
 
     private Movie mMovie;
 
-    private Observer<Movie> observer = movie -> {
+    private Observer<Movie> movieObserver = movie -> {
         if (movie != null) {
             mMovie = movie;
             loadMovieDetails(movie);
@@ -64,14 +69,27 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
             mViewModel = ViewModelProviders.of(this, factory).get(MovieDetailViewModel.class);
-            mViewModel.getMovieById(extras.getInt(Constants.MOVIEKEY)).observe(this, observer);
-            isFavorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateMovie();
-                }
+            mViewModel.getMovieById(extras.getInt(Constants.MOVIEKEY)).observe(this, movieObserver);
+            isFavorite.setOnClickListener(view -> {
+                updateMovie();
             });
         }
+        setUpRecyclerViews();
+    }
+
+    /**
+     * Initial Setup for Trailer / Review
+     * RecyclerViews
+     */
+    private void setUpRecyclerViews() {
+
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     /**
@@ -93,13 +111,35 @@ public class MovieDetailActivity extends AppCompatActivity {
         releasedateTextView.setText(movie.getRelease_date());
         String text = movie.getOverview() + movie.getOverview() + movie.getOverview() + movie.getOverview();
         plotTextView.setText(text);
+        isFavorite.setChecked(movie.isFavorite());
+
+        mViewModel.loadTrailerById(movie.getId());
     }
 
+    /**
+     * Update the Movie prop
+     * when favorite checkbox was checked/unchecked
+     */
     private void updateMovie() {
         if (mMovie != null) {
             mMovie.setFavorite(isFavorite.isChecked());
             mViewModel.updateMovie(mMovie);
+
+            createAndShowSnackBar();
         }
+    }
+
+    /**
+     * Create and show up the Snackbar
+     */
+    private void createAndShowSnackBar() {
+        int message;
+        if (isFavorite.isChecked()) {
+            message = R.string.added_to_favorites;
+        } else {
+            message = R.string.removed_from_favorites;
+        }
+        Snackbar.make(findViewById(R.id.coordinatLayout), message, Snackbar.LENGTH_SHORT).show();
     }
 
 }

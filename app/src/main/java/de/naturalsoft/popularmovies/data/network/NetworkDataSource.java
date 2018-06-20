@@ -9,15 +9,18 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.database.Movie;
 import de.naturalsoft.popularmovies.data.database.MovieResponse;
 import de.naturalsoft.popularmovies.error.NoKeyError;
+import de.naturalsoft.popularmovies.utils.Constants.BuildConfig;
 import de.naturalsoft.popularmovies.utils.DataHelper;
-import de.naturalsoft.popularmovies.utils.NetworkHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static de.naturalsoft.popularmovies.utils.Constants.MOVIESSTDID;
 
 /**
  * PopularMovies
@@ -33,9 +36,6 @@ public class NetworkDataSource {
     private Context mContext;
     private static String lastSetting = "";
 
-    public final static String BASEMOVIESURL = "http://api.themoviedb.org/3/";
-    public final static String BASEIMAGEURL = "https://image.tmdb.org/t/p/";
-    private final static String MOVIESKEY = ""; //TODO you need to set the API Key here
 
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
     private static Retrofit mRetrofit;
@@ -66,9 +66,33 @@ public class NetworkDataSource {
      */
     private static String getMovieskey() throws NoKeyError {
 
-        if (MOVIESKEY.isEmpty()) throw new NoKeyError();
+        if (BuildConfig.API_KEY.isEmpty()) throw new NoKeyError();
 
-        return MOVIESKEY;
+        return BuildConfig.API_KEY;
+    }
+
+    /**
+     * Handle the Retrofit Callback
+     *
+     * @param call Retrofit Call Obj
+     * @throws NullPointerException
+     */
+    private static <T> void doCall(Call<T> call) throws NullPointerException {
+
+        call.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
+                Log.d(CLASSTAG, "ClassType: " + response.body().getClass().getSimpleName());
+                if (response.body().getClass().isAssignableFrom(MovieResponse.class))
+                    mDownloadedMovies.postValue(((MovieResponse) response.body()).getmMovieList());
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                Log.d(CLASSTAG, "CALL onFailure " + t.getLocalizedMessage());
+            }
+        });
     }
 
     /**
@@ -76,12 +100,20 @@ public class NetworkDataSource {
      *
      * @param type to load (Top rated / popular)
      */
-    public static void loadMoviesForType(String type) {
+    public void loadMoviesForType(int id, String type) {
 
         try {
 
             MovieClient client = mRetrofit.create(MovieClient.class);
-            Call<MovieResponse> call = client.getMovies(type, getMovieskey());
+
+            Call<?> call = null;
+            if (id == MOVIESSTDID) {
+                call = client.getMovies(type, getMovieskey());
+            } else {
+                Log.d(CLASSTAG, "MOVIES ID " + id);
+                call = client.getTrailerByMovieId(id, getMovieskey());
+            }
+
 
             if (call != null) doCall(call);
         } catch (NullPointerException e) {
@@ -92,27 +124,6 @@ public class NetworkDataSource {
 
     }
 
-    /**
-     * Handle the Retrofit Callback
-     *
-     * @param call Retrofit Call Obj
-     * @throws NullPointerException
-     */
-    private static void doCall(Call<MovieResponse> call) throws NullPointerException {
-
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
-                mDownloadedMovies.postValue(response.body().getmMovieList());
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Log.d(CLASSTAG, "CALL onFailure " + t.getLocalizedMessage());
-            }
-        });
-    }
 
     /**
      * Get the current Movies
@@ -133,7 +144,7 @@ public class NetworkDataSource {
 
         if (!lastSetting.equals(currentSetting) || mDownloadedMovies.getValue() == null) {
             Log.d(CLASSTAG, "Settings has changed");
-            loadMoviesForType(currentSetting);
+            loadMoviesForType(MOVIESSTDID, currentSetting);
             lastSetting = currentSetting;
         }
     }

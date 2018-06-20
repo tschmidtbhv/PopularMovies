@@ -24,7 +24,7 @@ import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivityViewModel;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivityViewModel;
-import de.naturalsoft.popularmovies.ui.list.MoviesAdapter;
+import de.naturalsoft.popularmovies.ui.share.MoviesAdapter;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.DataHelper;

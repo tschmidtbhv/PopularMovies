@@ -15,7 +15,9 @@
     <string name="plotsynopsis">Plot synopsis:</string>
     <string name="default_poster_size">w185_and_h278_bestv2</string>
 
-    <!--Shared transition name-->
     <string name="poster_transition_name">poster</string>
     <string name="bookmark">bookmark</string>
+    <string name="added_to_favorites">Your movies was added to your favorite list.</string>
+    <string name="removed_from_favorites">Your movie was removed from your favorite list.</string>
+    <string name="trailerPoster">Image of the Trailer</string>
 </resources>

@@ -20,4 +20,5 @@
     <string name="added_to_favorites">Your movies was added to your favorite list.</string>
     <string name="removed_from_favorites">Your movie was removed from your favorite list.</string>
     <string name="trailerPoster">Image of the Trailer</string>
+    <string name="reviews">Reviews</string>
 </resources>

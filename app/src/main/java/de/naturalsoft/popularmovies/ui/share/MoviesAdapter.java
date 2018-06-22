@@ -9,13 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
-import de.naturalsoft.popularmovies.data.database.Movie;
-import de.naturalsoft.popularmovies.utils.NetworkHelper;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 
 /**
  * PopularMovies
@@ -37,10 +34,7 @@ public class MoviesAdapter extends BaseAdapter<MoviesAdapter.ViewHolder> {
         Drawable drawable = mContext.getResources().getDrawable(R.drawable.poster_not_available);
 
         Movie movie = ((List<Movie>) getDataList()).get(position);
-        Picasso.get().load(NetworkHelper.getImageURI(movie.getPoster_path(), mContext.getString(R.string.default_poster_size)))
-                .placeholder(drawable)
-                .error(drawable)
-                .into(holder.poster);
+        loadImage(movie.getPoster_path(), mContext.getString(R.string.default_poster_size), drawable, holder.poster);
     }
 
     @NonNull

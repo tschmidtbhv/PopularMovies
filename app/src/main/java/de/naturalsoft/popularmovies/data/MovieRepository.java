@@ -6,7 +6,9 @@ import android.util.Log;
 import java.util.List;
 
 import de.naturalsoft.popularmovies.AppExecutors;
-import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.data.database.MovieDao;
 import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
 
@@ -80,7 +82,11 @@ public class MovieRepository {
         });
     }
 
-    public void loadTrailerById(int id) {
-        mNetworkDataSource.loadMoviesForType(id, "trailer");
+    public LiveData<List<Trailer>> getTrailerByMovieId(int id) {
+        return mNetworkDataSource.getTrailerByMovieId(id);
+    }
+
+    public LiveData<List<ReviewResponse.Review>> getReviewsByMovieId(int id) {
+        return mNetworkDataSource.getReviewsByMovieId(id);
     }
 }

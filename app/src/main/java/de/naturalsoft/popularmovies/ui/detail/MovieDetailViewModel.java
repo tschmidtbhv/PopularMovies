@@ -3,8 +3,12 @@ package de.naturalsoft.popularmovies.ui.detail;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
+import java.util.List;
+
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.data.MovieRepository;
-import de.naturalsoft.popularmovies.data.database.Movie;
 
 /**
  * PopularMovies
@@ -26,7 +30,11 @@ public class MovieDetailViewModel extends ViewModel {
         movieRepository.updateMoview(movie);
     }
 
-    public void loadTrailerById(int id) {
-        movieRepository.loadTrailerById(id);
+    public LiveData<List<Trailer>> getTrailerByMovieId(int id) {
+        return movieRepository.getTrailerByMovieId(id);
+    }
+
+    public LiveData<List<ReviewResponse.Review>> getReviewsByMovieId(int id) {
+        return movieRepository.getReviewsByMovieId(id);
     }
 }

@@ -2,10 +2,12 @@ package de.naturalsoft.popularmovies.data.database;
 
 import java.util.List;
 
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 31.05.2018.
- *
+ * <p>
  * MovieResponse includes Movies
  */
 public class MovieResponse {

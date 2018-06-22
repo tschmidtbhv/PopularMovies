@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 import de.naturalsoft.popularmovies.data.MovieRepository;
-import de.naturalsoft.popularmovies.data.database.Movie;
 
 /**
  * PopularMovies

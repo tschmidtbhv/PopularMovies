@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,10 +16,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.naturalsoft.popularmovies.R;
-import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse.Review;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
@@ -45,6 +50,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.reviewRecycler)
     RecyclerView reviewRecycler;
 
+    private TrailerAdapter trailerAdapter;
+    private ReviewAdapter reviewAdapter;
 
     private Movie mMovie;
 
@@ -52,6 +59,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (movie != null) {
             mMovie = movie;
             loadMovieDetails(movie);
+        }
+    };
+
+    private Observer<List<Trailer>> trailerObserver = trailer -> {
+        if (trailer != null) {
+            trailerAdapter.swapMovies(trailer);
+        }
+    };
+
+    private Observer<List<Review>> reviewObserver = reviews -> {
+        if (reviews != null) {
+            reviewAdapter.swapMovies(reviews);
         }
     };
 
@@ -82,8 +101,17 @@ public class MovieDetailActivity extends AppCompatActivity {
      * RecyclerViews
      */
     private void setUpRecyclerViews() {
+        trailerAdapter = new TrailerAdapter(this);
+        trailerRecycler.setAdapter(trailerAdapter);
 
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
+        trailerRecycler.setLayoutManager(layoutManager);
+
+        reviewAdapter = new ReviewAdapter();
+        reviewRecycler.setLayoutManager(new LinearLayoutManager(this));
+        reviewRecycler.setAdapter(reviewAdapter);
     }
 
     @Override
@@ -113,7 +141,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         plotTextView.setText(text);
         isFavorite.setChecked(movie.isFavorite());
 
-        mViewModel.loadTrailerById(movie.getId());
+        mViewModel.getTrailerByMovieId(movie.getId()).observe(this, trailerObserver);
+        mViewModel.getReviewsByMovieId(movie.getId()).observe(this, reviewObserver);
     }
 
     /**

@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 10.06.2018.

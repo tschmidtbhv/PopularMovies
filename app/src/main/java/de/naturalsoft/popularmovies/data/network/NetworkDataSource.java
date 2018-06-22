@@ -9,8 +9,11 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.R;
-import de.naturalsoft.popularmovies.data.database.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse.Review;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.data.database.MovieResponse;
 import de.naturalsoft.popularmovies.error.NoKeyError;
 import de.naturalsoft.popularmovies.utils.Constants.BuildConfig;
@@ -38,6 +41,9 @@ public class NetworkDataSource {
 
 
     private static MutableLiveData<List<Movie>> mDownloadedMovies;
+    private static MutableLiveData<List<Trailer>> mTrailers;
+    private static MutableLiveData<List<Review>> mReviews;
+
     private static Retrofit mRetrofit;
 
     private NetworkDataSource(Context context) {
@@ -84,8 +90,16 @@ public class NetworkDataSource {
             public void onResponse(Call<T> call, Response<T> response) {
                 Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
                 Log.d(CLASSTAG, "ClassType: " + response.body().getClass().getSimpleName());
-                if (response.body().getClass().isAssignableFrom(MovieResponse.class))
+
+                Class classType = response.body().getClass();
+                if (classType.isAssignableFrom(MovieResponse.class)) {
                     mDownloadedMovies.postValue(((MovieResponse) response.body()).getmMovieList());
+                } else if (classType.isAssignableFrom(TrailerResponse.class)) {
+                    mTrailers.postValue(((TrailerResponse) response.body()).getTrailer());
+                } else if (classType.isAssignableFrom(ReviewResponse.class)) {
+                    mReviews.postValue(((ReviewResponse) response.body()).getReviews());
+                }
+
             }
 
             @Override
@@ -109,9 +123,11 @@ public class NetworkDataSource {
             Call<?> call = null;
             if (id == MOVIESSTDID) {
                 call = client.getMovies(type, getMovieskey());
-            } else {
+            } else if (type.equals("trailer")) {
                 Log.d(CLASSTAG, "MOVIES ID " + id);
                 call = client.getTrailerByMovieId(id, getMovieskey());
+            } else if (type.equals("reviews")) {
+                call = client.getReviewsByMovieId(id, getMovieskey());
             }
 
 
@@ -132,6 +148,29 @@ public class NetworkDataSource {
      */
     public LiveData<List<Movie>> getCurrentMovies() {
         return mDownloadedMovies;
+    }
+
+    /**
+     * Trailer for Movie
+     *
+     * @param id Movie id
+     * @return List of Trailer
+     */
+    public LiveData<List<Trailer>> getTrailerByMovieId(int id) {
+        if (mTrailers == null) {
+            mTrailers = new MutableLiveData<>();
+        }
+
+        loadMoviesForType(id, "trailer");
+        return mTrailers;
+    }
+
+
+    public LiveData<List<Review>> getReviewsByMovieId(int id) {
+
+        if (mReviews == null) mReviews = new MutableLiveData<>();
+        loadMoviesForType(id, "reviews");
+        return mReviews;
     }
 
     /**

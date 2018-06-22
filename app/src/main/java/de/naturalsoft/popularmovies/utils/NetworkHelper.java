@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import de.naturalsoft.popularmovies.utils.Constants.BuildConfig;
+
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 04.06.2018.
@@ -23,17 +24,23 @@ public interface NetworkHelper {
      */
     static Uri getImageURI(String imagePath, String optImageWidth) {
 
+        Uri.Builder imageUri;
+        if (!imagePath.contains("http://")) {
+            imageUri = Uri.parse(BuildConfig.BASEIMAGEURL).buildUpon();
 
-        Uri.Builder imageUri = Uri.parse(BuildConfig.BASEIMAGEURL).buildUpon();
+            if (optImageWidth == null) {
+                imageUri.appendPath(imageWidth);
+            } else {
+                imageUri.appendPath(optImageWidth);
+            }
 
-        if (optImageWidth == null) {
-            imageUri.appendPath(imageWidth);
+            imageUri.appendEncodedPath(imagePath)
+                    .build();
         } else {
-            imageUri.appendPath(optImageWidth);
+            imageUri = Uri.parse(imagePath).buildUpon();
+            imageUri.appendEncodedPath("0.jpg");
         }
 
-        imageUri.appendEncodedPath(imagePath)
-                .build();
 
         Log.d("TAG", "PATH: " + imageUri.toString());
         return imageUri.build();

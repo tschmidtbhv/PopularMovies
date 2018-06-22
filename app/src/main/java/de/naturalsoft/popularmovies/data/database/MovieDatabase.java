@@ -6,6 +6,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 10.06.2018.

@@ -1,4 +1,4 @@
-package de.naturalsoft.popularmovies.data.database;
+package de.naturalsoft.popularmovies.data.DataObjects;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -22,14 +22,6 @@ public class Movie {
     private boolean isFavorite;
     private String type;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Movie(int id, String title, String original_title, String overview, String poster_path, String release_date, String vote_average, String type, boolean isFavorite) {
         this.id = id;
         this.title = title;
@@ -41,7 +33,6 @@ public class Movie {
         this.type = type;
         this.isFavorite = isFavorite;
     }
-
 
     /**
      * For incomming movies
@@ -64,6 +55,13 @@ public class Movie {
         this.vote_average = vote_average;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public int getId() {
         return id;

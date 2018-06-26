@@ -5,6 +5,11 @@ import android.util.Log;
 
 import java.util.List;
 
+import de.naturalsoft.popularmovies.AppExecutors;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse;
+import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
+import de.naturalsoft.popularmovies.data.database.MovieDao;
 import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
 
 /**
@@ -16,33 +21,72 @@ public class MovieRepository {
     private final static String CLASSTAG = MovieRepository.class.getSimpleName();
 
     private static final Object LOCK = new Object();
-    private static  MovieRepository sINSTANCE;
+    private static MovieRepository sINSTANCE;
     private static NetworkDataSource mNetworkDataSource;
+    private static MovieDao mMovieDao;
+    private final AppExecutors mExecutors;
 
-    private LiveData<List<Movie>> mMovies;
 
-    private MovieRepository(NetworkDataSource networkUtil){
+    private MovieRepository(MovieDao movieDao, NetworkDataSource networkUtil, AppExecutors executors) {
         mNetworkDataSource = networkUtil;
-        mMovies = mNetworkDataSource.getCurrentMovies();
+        mMovieDao = movieDao;
+        mExecutors = executors;
+        settingObserver();
     }
 
-    public synchronized static MovieRepository getInstance(NetworkDataSource networkUtil){
-        if(sINSTANCE == null){
+    public synchronized static MovieRepository getInstance(MovieDao movieDao, NetworkDataSource networkUtil, AppExecutors executors) {
+        if (sINSTANCE == null) {
             synchronized (LOCK) {
                 Log.d(CLASSTAG, "NewX MovieRepository");
-                sINSTANCE = new MovieRepository(networkUtil);
+                sINSTANCE = new MovieRepository(movieDao, networkUtil, executors);
             }
         }
 
         return sINSTANCE;
     }
 
-    public LiveData<List<Movie>>getCurrentMovies(){
-        return mMovies;
+    private void settingObserver() {
+        LiveData<List<Movie>> movies = mNetworkDataSource.getCurrentMovies();
+        movies.observeForever(moviesFromNetwork -> {
+            mExecutors.getDiskIO().execute(() -> {
+                deleteOldData();
+                mMovieDao.insertMovies(moviesFromNetwork);
+            });
+        });
     }
 
-    public void checkSettingsHasChanged(){
+    private void deleteOldData() {
+        mMovieDao.deleteAllNoFavsMovies();
+    }
+
+
+    public LiveData<List<Movie>> getCurrentMovies() {
+        return mMovieDao.getAllMovies();
+    }
+
+    public LiveData<Movie> getMovieById(int id) {
+        return mMovieDao.getMovieById(id);
+    }
+
+    public void checkSettingsHasChanged() {
         mNetworkDataSource.checkSettingsHasChanged();
     }
 
+    public LiveData<List<Movie>> getCurrentFavorites() {
+        return mMovieDao.getFavoriteMovies();
+    }
+
+    public void updateMoview(Movie movie) {
+        mExecutors.getDiskIO().execute(() -> {
+            mMovieDao.updateMovie(movie);
+        });
+    }
+
+    public LiveData<List<Trailer>> getTrailerByMovieId(int id) {
+        return mNetworkDataSource.getTrailerByMovieId(id);
+    }
+
+    public LiveData<List<ReviewResponse.Review>> getReviewsByMovieId(int id) {
+        return mNetworkDataSource.getReviewsByMovieId(id);
+    }
 }

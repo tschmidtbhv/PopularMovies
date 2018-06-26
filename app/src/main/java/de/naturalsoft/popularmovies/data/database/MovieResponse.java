@@ -1,16 +1,18 @@
-package de.naturalsoft.popularmovies.data;
+package de.naturalsoft.popularmovies.data.database;
 
 import java.util.List;
+
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 
 /**
  * PopularMovies
  * Created by Thomas Schmidt on 31.05.2018.
- *
+ * <p>
  * MovieResponse includes Movies
  */
 public class MovieResponse {
 
-    List<Movie> results;
+    private List<Movie> results;
 
     private String page;
     private String total_pages;

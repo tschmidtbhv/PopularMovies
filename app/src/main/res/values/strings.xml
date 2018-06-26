@@ -14,4 +14,17 @@
     <string name="releasedate">Release date:</string>
     <string name="plotsynopsis">Plot synopsis:</string>
     <string name="default_poster_size">w185_and_h278_bestv2</string>
+
+    <string name="poster_transition_name">poster</string>
+    <string name="bookmark">bookmark</string>
+    <string name="added_to_favorites">Your movies was added to your favorite list.</string>
+    <string name="removed_from_favorites">Your movie was removed from your favorite list.</string>
+    <string name="trailerPoster">Image of the Trailer</string>
+    <string name="reviews">Reviews</string>
+    <string name="app_not_found">App was not found on your device</string>
+    <string name="youtube_uri_key">vnd.youtube:</string>
+    <string name="default_share_text">Hey buddy, I want to share some movie informations with you. %s has a vote of %s check this out.</string>
+    <string name="vote_average">Average: %s</string>
+    <string name="favorites">Favorites</string>
+    <string name="movies">Movies</string>
 </resources>

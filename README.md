@@ -1,4 +1,4 @@
-# PopularMovies Stage 2 (Work in Progress)
+# PopularMovies Stage 2 (In Review)
 
 - Popular Movies app for Udacity Android Developer Nanodegree
 - This app retrieves data from [The Movie DB](https://www.themoviedb.org)
@@ -13,6 +13,7 @@ Libraries are used in this Project are:
 - Picasso
 - Retrofit
 - GSON & Converter
+- CardView
 
 
 

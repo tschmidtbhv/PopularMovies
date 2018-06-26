@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
+import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.ui.share.BaseAdapter;
+import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 import de.naturalsoft.popularmovies.utils.Constants;
 
 /**
@@ -24,9 +26,11 @@ import de.naturalsoft.popularmovies.utils.Constants;
 public class TrailerAdapter extends BaseAdapter<TrailerAdapter.ViewHolder> {
 
     private Context mContext;
+    private OnItemClickListener listener;
 
     public TrailerAdapter(Context context) {
         mContext = context;
+        listener = (OnItemClickListener) context;
     }
 
     @NonNull
@@ -55,6 +59,9 @@ public class TrailerAdapter extends BaseAdapter<TrailerAdapter.ViewHolder> {
 
             super(itemView);
             trailerPoster = itemView.findViewById(R.id.trailerPoster);
+            itemView.setOnClickListener(view ->
+                    listener.onItemClicked(((Trailer) ((List<Trailer>) getDataList()).get(getAdapterPosition())).getKey())
+            );
         }
     }
 }

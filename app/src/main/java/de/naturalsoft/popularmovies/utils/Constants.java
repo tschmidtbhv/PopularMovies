@@ -9,6 +9,8 @@ public interface Constants {
     int MOVIESSTDID = -1;
     String MOVIEKEY = "MOVIEKEY";
     String ISBOOKMARK = "ISBOOKMARK";
+    String TRAILERTYPE = "TRAILER";
+    String REVIEWTYPE = "REVIEW";
 
     interface BuildConfig {
 

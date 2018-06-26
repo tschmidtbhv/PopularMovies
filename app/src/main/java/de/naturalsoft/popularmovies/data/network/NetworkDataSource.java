@@ -24,6 +24,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static de.naturalsoft.popularmovies.utils.Constants.MOVIESSTDID;
+import static de.naturalsoft.popularmovies.utils.Constants.REVIEWTYPE;
+import static de.naturalsoft.popularmovies.utils.Constants.TRAILERTYPE;
 
 /**
  * PopularMovies
@@ -88,16 +90,18 @@ public class NetworkDataSource {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
-                Log.d(CLASSTAG, "ClassType: " + response.body().getClass().getSimpleName());
+                if (response.body() != null) {
+                    Log.d(CLASSTAG, "CALL onResponse " + response.toString() + " " + new GsonBuilder().setPrettyPrinting().create().toJson(response));
+                    Log.d(CLASSTAG, "ClassType: " + response.body().getClass().getSimpleName());
 
-                Class classType = response.body().getClass();
-                if (classType.isAssignableFrom(MovieResponse.class)) {
-                    mDownloadedMovies.postValue(((MovieResponse) response.body()).getmMovieList());
-                } else if (classType.isAssignableFrom(TrailerResponse.class)) {
-                    mTrailers.postValue(((TrailerResponse) response.body()).getTrailer());
-                } else if (classType.isAssignableFrom(ReviewResponse.class)) {
-                    mReviews.postValue(((ReviewResponse) response.body()).getReviews());
+                    Class classType = response.body().getClass();
+                    if (classType.isAssignableFrom(MovieResponse.class)) {
+                        mDownloadedMovies.postValue(((MovieResponse) response.body()).getmMovieList());
+                    } else if (classType.isAssignableFrom(TrailerResponse.class)) {
+                        mTrailers.postValue(((TrailerResponse) response.body()).getTrailer());
+                    } else if (classType.isAssignableFrom(ReviewResponse.class)) {
+                        mReviews.postValue(((ReviewResponse) response.body()).getReviews());
+                    }
                 }
 
             }
@@ -123,10 +127,10 @@ public class NetworkDataSource {
             Call<?> call = null;
             if (id == MOVIESSTDID) {
                 call = client.getMovies(type, getMovieskey());
-            } else if (type.equals("trailer")) {
+            } else if (type.equals(TRAILERTYPE)) {
                 Log.d(CLASSTAG, "MOVIES ID " + id);
                 call = client.getTrailerByMovieId(id, getMovieskey());
-            } else if (type.equals("reviews")) {
+            } else if (type.equals(REVIEWTYPE)) {
                 call = client.getReviewsByMovieId(id, getMovieskey());
             }
 
@@ -161,7 +165,7 @@ public class NetworkDataSource {
             mTrailers = new MutableLiveData<>();
         }
 
-        loadMoviesForType(id, "trailer");
+        loadMoviesForType(id, TRAILERTYPE);
         return mTrailers;
     }
 
@@ -169,7 +173,7 @@ public class NetworkDataSource {
     public LiveData<List<Review>> getReviewsByMovieId(int id) {
 
         if (mReviews == null) mReviews = new MutableLiveData<>();
-        loadMoviesForType(id, "reviews");
+        loadMoviesForType(id, REVIEWTYPE);
         return mReviews;
     }
 

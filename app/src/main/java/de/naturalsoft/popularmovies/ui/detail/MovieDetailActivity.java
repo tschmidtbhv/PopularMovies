@@ -2,17 +2,22 @@ package de.naturalsoft.popularmovies.ui.detail;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,12 +29,13 @@ import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse.Review;
 import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
+import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements OnItemClickListener {
 
     MovieDetailViewModel mViewModel;
 
@@ -82,6 +88,14 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.share);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -171,4 +185,34 @@ public class MovieDetailActivity extends AppCompatActivity {
         Snackbar.make(findViewById(R.id.coordinatLayout), message, Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onItemClickedWithImage(ImageView imageView, int movieId) {
+        //We don`t need it here (Because we won*t animate anything)
+    }
+
+    /**
+     * Open up Youtube with the given Trailer key
+     * Youtube App / Browser is needed
+     * If not an Toast will shown
+     *
+     * @param key trailerKey
+     */
+    @Override
+    public void onItemClicked(String key) {
+
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_uri_key) + key));
+
+        if (appIntent.resolveActivity(getPackageManager()) != null)
+            startActivity(appIntent);
+        else {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(Constants.BuildConfig.YOUTUBE_URL + key));
+            if (webIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(webIntent);
+            } else {
+                Toast.makeText(this, getString(R.string.app_not_found), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
 }

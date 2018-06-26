@@ -24,6 +24,7 @@ import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivityViewModel;
 import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivityViewModel;
+import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.ui.share.MoviesAdapter;
 import de.naturalsoft.popularmovies.utils.Constants;
@@ -34,7 +35,7 @@ import de.naturalsoft.popularmovies.utils.InjectorUtil;
  * PopularMovies
  * Created by Thomas Schmidt on 18.06.2018.
  */
-public abstract class BaseActivity extends AppCompatActivity implements MoviesAdapter.OnAdapterListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnItemClickListener {
 
     private final static String CLASSNAME = MovieActivity.class.getSimpleName();
     private final static int numberOfColumns = 2;
@@ -124,9 +125,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MoviesAd
     }
 
     @Override
-    public void showDetailsActivity(ImageView imageView, int movieId) {
+    public void onItemClickedWithImage(ImageView imageView, int movieId) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         intent.putExtra(Constants.MOVIEKEY, movieId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemClicked(String key) {
+        //Unused here (We just need the Clicked with Image to animate it
     }
 }

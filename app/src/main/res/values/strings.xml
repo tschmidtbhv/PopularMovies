@@ -21,4 +21,6 @@
     <string name="removed_from_favorites">Your movie was removed from your favorite list.</string>
     <string name="trailerPoster">Image of the Trailer</string>
     <string name="reviews">Reviews</string>
+    <string name="app_not_found">App was not found on your device</string>
+    <string name="youtube_uri_key">vnd.youtube:</string>
 </resources>

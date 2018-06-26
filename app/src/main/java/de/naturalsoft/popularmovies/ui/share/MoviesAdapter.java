@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.data.DataObjects.Movie;
+import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 
 /**
  * PopularMovies
@@ -21,11 +22,11 @@ import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 public class MoviesAdapter extends BaseAdapter<MoviesAdapter.ViewHolder> {
 
     private Context mContext;
-    private OnAdapterListener listener;
+    private OnItemClickListener listener;
 
     public MoviesAdapter(Context context) {
         mContext = context;
-        listener = (OnAdapterListener) context;
+        listener = (OnItemClickListener) context;
     }
 
     @Override
@@ -45,11 +46,6 @@ public class MoviesAdapter extends BaseAdapter<MoviesAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-
-    public interface OnAdapterListener {
-        void showDetailsActivity(ImageView imageView, int movieId);
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         Context context;
@@ -61,7 +57,7 @@ public class MoviesAdapter extends BaseAdapter<MoviesAdapter.ViewHolder> {
             context = itemView.getContext();
 
             itemView.setOnClickListener(view ->
-                    listener.showDetailsActivity(poster, ((Movie) ((List<Movie>) getDataList()).get(getAdapterPosition())).getId())
+                    listener.onItemClickedWithImage(poster, ((Movie) ((List<Movie>) getDataList()).get(getAdapterPosition())).getId())
             );
         }
     }

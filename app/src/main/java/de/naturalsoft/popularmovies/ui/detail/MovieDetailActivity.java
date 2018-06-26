@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +34,8 @@ import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
 import de.naturalsoft.popularmovies.utils.NetworkHelper;
 
+import static de.naturalsoft.popularmovies.utils.Constants.BuildConfig.SHARETYPE;
+
 public class MovieDetailActivity extends AppCompatActivity implements OnItemClickListener {
 
     MovieDetailViewModel mViewModel;
@@ -43,8 +44,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
     ImageView poster;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
+
     @BindView(R.id.releasedateTextView)
     TextView releasedateTextView;
     @BindView(R.id.plotTextView)
@@ -55,6 +55,10 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
     RecyclerView trailerRecycler;
     @BindView(R.id.reviewRecycler)
     RecyclerView reviewRecycler;
+    @BindView(R.id.reviewTV)
+    TextView reviewTV;
+    @BindView(R.id.vote_average)
+    TextView voteAverage;
 
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
@@ -70,12 +74,21 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
 
     private Observer<List<Trailer>> trailerObserver = trailer -> {
         if (trailer != null) {
+            if (trailer.size() > 0) {
+                trailerRecycler.setVisibility(View.VISIBLE);
+            }
             trailerAdapter.swapMovies(trailer);
         }
     };
 
     private Observer<List<Review>> reviewObserver = reviews -> {
         if (reviews != null) {
+
+            if (reviews.size() > 0) {
+                reviewTV.setVisibility(View.VISIBLE);
+                reviewRecycler.setVisibility(View.VISIBLE);
+            }
+
             reviewAdapter.swapMovies(reviews);
         }
     };
@@ -93,12 +106,24 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mMovie != null) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_text, mMovie.getTitle(), mMovie.getVote_average()));
+                    shareIntent.setType(SHARETYPE);
+                    if (shareIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(shareIntent);
+                    } else {
+                        Toast.makeText(MovieDetailActivity.this, getString(R.string.app_not_found), Toast.LENGTH_SHORT).show();
+                    }
 
+                }
             }
         });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+
+            setTitle(extras.getString(Constants.MOVIESTITLE));
 
             MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
             mViewModel = ViewModelProviders.of(this, factory).get(MovieDetailViewModel.class);
@@ -145,11 +170,9 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
                 .placeholder(getResources().getDrawable(R.drawable.poster_not_available))
                 .into(poster);
 
-        getSupportActionBar().setTitle(movie.getTitle());
+        Log.d("TAG", " MOVIE IMAGEPATH " + movie.getId() + " MOVIE IMAGEPATH " + movie.getPoster_path());
 
-        Log.d("TAG", "Movie ID " + movie.getId() + " MOVIE IMAGEPATH " + movie.getPoster_path());
-        ratingBar.setNumStars(10);
-        ratingBar.setRating(Float.parseFloat(movie.getVote_average()));
+        voteAverage.setText(getString(R.string.vote_average, movie.getVote_average()));
         releasedateTextView.setText(movie.getRelease_date());
         String text = movie.getOverview() + movie.getOverview() + movie.getOverview() + movie.getOverview();
         plotTextView.setText(text);
@@ -186,7 +209,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     @Override
-    public void onItemClickedWithImage(ImageView imageView, int movieId) {
+    public void onItemClickedWithImage(ImageView imageView, Movie movie) {
         //We don`t need it here (Because we won*t animate anything)
     }
 

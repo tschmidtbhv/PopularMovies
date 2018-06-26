@@ -2,4 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="stdmargin">16dp</dimen>
     <dimen name="progressBarSize">42dp</dimen>
+    <dimen name="title">18sp</dimen>
 </resources>

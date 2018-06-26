@@ -57,7 +57,7 @@ public class MoviesAdapter extends BaseAdapter<MoviesAdapter.ViewHolder> {
             context = itemView.getContext();
 
             itemView.setOnClickListener(view ->
-                    listener.onItemClickedWithImage(poster, ((Movie) ((List<Movie>) getDataList()).get(getAdapterPosition())).getId())
+                    listener.onItemClickedWithImage(poster, ((Movie) ((List<Movie>) getDataList()).get(getAdapterPosition())))
             );
         }
     }

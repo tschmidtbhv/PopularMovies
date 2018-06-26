@@ -10,6 +10,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -28,7 +30,6 @@ import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.ui.share.MoviesAdapter;
 import de.naturalsoft.popularmovies.utils.Constants;
-import de.naturalsoft.popularmovies.utils.DataHelper;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
 
 /**
@@ -39,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
 
     private final static String CLASSNAME = MovieActivity.class.getSimpleName();
     private final static int numberOfColumns = 2;
-    private static String lastSetting = "";
+
     @BindView(R.id.moviesRecyclerView)
 
     RecyclerView moviesRecyclerView;
@@ -72,9 +73,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
             mViewModel = ViewModelProviders.of(this, factory).get(BookmarkActivityViewModel.class);
         }
 
+        setTitle(setActionBarTitle());
         setUpRecyclerView();
         loadDataView();
     }
+
+    public abstract String setActionBarTitle();
 
     /**
      * Shows loading if the given
@@ -83,8 +87,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
      * Set the observer for that LiveData
      */
     private void loadDataView() {
-
-        lastSetting = DataHelper.getSelectedType(this);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -102,6 +104,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         mMoviesAdapter = new MoviesAdapter(this);
 
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layoutanimation_fall_down);
+
+        moviesRecyclerView.setLayoutAnimation(animationController);
         moviesRecyclerView.setLayoutManager(layoutManager);
         moviesRecyclerView.setHasFixedSize(true);
         moviesRecyclerView.setAdapter(mMoviesAdapter);
@@ -125,9 +130,10 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
     }
 
     @Override
-    public void onItemClickedWithImage(ImageView imageView, int movieId) {
+    public void onItemClickedWithImage(ImageView imageView, Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(Constants.MOVIEKEY, movieId);
+        intent.putExtra(Constants.MOVIEKEY, movie.getId());
+        intent.putExtra(Constants.MOVIESTITLE, movie.getTitle());
         startActivity(intent);
     }
 

@@ -8,6 +8,7 @@ public interface Constants {
 
     int MOVIESSTDID = -1;
     String MOVIEKEY = "MOVIEKEY";
+    String MOVIESTITLE = "MOVIESTITLE";
     String ISBOOKMARK = "ISBOOKMARK";
     String TRAILERTYPE = "TRAILER";
     String REVIEWTYPE = "REVIEW";
@@ -19,6 +20,7 @@ public interface Constants {
         String BASEIMAGEURL = "https://image.tmdb.org/t/p/";
         String YOUTUBE_TUMBNAIL_URL = "http://img.youtube.com/vi/";
         String YOUTUBE_URL = "http://www.youtube.com/watch?v=";
+        String SHARETYPE = "text/plain";
     }
 
 }

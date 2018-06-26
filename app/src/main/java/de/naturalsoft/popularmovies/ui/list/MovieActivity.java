@@ -69,4 +69,8 @@ public class MovieActivity extends BaseActivity {
     }
 
 
+    @Override
+    public String setActionBarTitle() {
+        return getString(R.string.movies);
+    }
 }

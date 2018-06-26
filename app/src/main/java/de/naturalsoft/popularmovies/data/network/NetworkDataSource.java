@@ -47,6 +47,7 @@ public class NetworkDataSource {
     private static MutableLiveData<List<Review>> mReviews;
 
     private static Retrofit mRetrofit;
+    private static int lastId;
 
     private NetworkDataSource(Context context) {
         mContext = context;
@@ -161,19 +162,24 @@ public class NetworkDataSource {
      * @return List of Trailer
      */
     public LiveData<List<Trailer>> getTrailerByMovieId(int id) {
-        if (mTrailers == null) {
+        if (mTrailers == null || id != lastId) {
             mTrailers = new MutableLiveData<>();
+            loadMoviesForType(id, TRAILERTYPE);
         }
 
-        loadMoviesForType(id, TRAILERTYPE);
+
         return mTrailers;
     }
 
 
     public LiveData<List<Review>> getReviewsByMovieId(int id) {
 
-        if (mReviews == null) mReviews = new MutableLiveData<>();
-        loadMoviesForType(id, REVIEWTYPE);
+        if (mReviews == null || id != lastId) {
+            mReviews = new MutableLiveData<>();
+            loadMoviesForType(id, REVIEWTYPE);
+            lastId = id;
+        }
+
         return mReviews;
     }
 

@@ -23,4 +23,8 @@
     <string name="reviews">Reviews</string>
     <string name="app_not_found">App was not found on your device</string>
     <string name="youtube_uri_key">vnd.youtube:</string>
+    <string name="default_share_text">Hey buddy, I want to share some movie informations with you. %s has a vote of %s check this out.</string>
+    <string name="vote_average">Average: %s</string>
+    <string name="favorites">Favorites</string>
+    <string name="movies">Movies</string>
 </resources>

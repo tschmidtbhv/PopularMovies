@@ -5,12 +5,13 @@ import android.util.Log;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.AppExecutors;
 import de.naturalsoft.popularmovies.data.DataObjects.Movie;
 import de.naturalsoft.popularmovies.data.DataObjects.ReviewResponse;
 import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.data.database.MovieDao;
 import de.naturalsoft.popularmovies.data.network.NetworkDataSource;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * PopularMovies
@@ -24,21 +25,19 @@ public class MovieRepository {
     private static MovieRepository sINSTANCE;
     private static NetworkDataSource mNetworkDataSource;
     private static MovieDao mMovieDao;
-    private final AppExecutors mExecutors;
 
 
-    private MovieRepository(MovieDao movieDao, NetworkDataSource networkUtil, AppExecutors executors) {
+    private MovieRepository(MovieDao movieDao, NetworkDataSource networkUtil) {
         mNetworkDataSource = networkUtil;
         mMovieDao = movieDao;
-        mExecutors = executors;
         settingObserver();
     }
 
-    public synchronized static MovieRepository getInstance(MovieDao movieDao, NetworkDataSource networkUtil, AppExecutors executors) {
+    public synchronized static MovieRepository getInstance(MovieDao movieDao, NetworkDataSource networkUtil) {
         if (sINSTANCE == null) {
             synchronized (LOCK) {
                 Log.d(CLASSTAG, "NewX MovieRepository");
-                sINSTANCE = new MovieRepository(movieDao, networkUtil, executors);
+                sINSTANCE = new MovieRepository(movieDao, networkUtil);
             }
         }
 
@@ -48,10 +47,11 @@ public class MovieRepository {
     private void settingObserver() {
         LiveData<List<Movie>> movies = mNetworkDataSource.getCurrentMovies();
         movies.observeForever(moviesFromNetwork -> {
-            mExecutors.getDiskIO().execute(() -> {
+            RxJavaPlugins.onSingleScheduler(Schedulers.single()).scheduleDirect(() -> {
                 deleteOldData();
                 mMovieDao.insertMovies(moviesFromNetwork);
             });
+
         });
     }
 
@@ -77,7 +77,7 @@ public class MovieRepository {
     }
 
     public void updateMoview(Movie movie) {
-        mExecutors.getDiskIO().execute(() -> {
+        RxJavaPlugins.onSingleScheduler(Schedulers.single()).scheduleDirect(() -> {
             mMovieDao.updateMovie(movie);
         });
     }

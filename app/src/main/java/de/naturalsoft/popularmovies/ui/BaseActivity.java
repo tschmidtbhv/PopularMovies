@@ -2,7 +2,6 @@ package de.naturalsoft.popularmovies.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,10 +26,11 @@ import de.naturalsoft.popularmovies.ui.detail.MovieDetailActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivity;
 import de.naturalsoft.popularmovies.ui.list.MovieActivityViewModel;
 import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
-import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.ui.share.MoviesAdapter;
 import de.naturalsoft.popularmovies.utils.Constants;
-import de.naturalsoft.popularmovies.utils.InjectorUtil;
+import de.naturalsoft.popularmovies.utils.helper.ViewHelper;
+
+import static de.naturalsoft.popularmovies.utils.Constants.ISTATE_RECYCLERVIEW_POSITION;
 
 /**
  * PopularMovies
@@ -39,7 +39,7 @@ import de.naturalsoft.popularmovies.utils.InjectorUtil;
 public abstract class BaseActivity extends AppCompatActivity implements OnItemClickListener {
 
     private final static String CLASSNAME = MovieActivity.class.getSimpleName();
-    private final static int numberOfColumns = 2;
+    private GridLayoutManager mLayoutManager;
 
     @BindView(R.id.moviesRecyclerView)
 
@@ -48,16 +48,17 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
     ViewModel mViewModel;
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
-    private int mPosition = RecyclerView.NO_POSITION;
+
     private Observer<List<Movie>> observer = movies -> {
 
         Log.d(CLASSNAME, "movie observe changed");
         mMoviesAdapter.swapMovies(movies);
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        moviesRecyclerView.smoothScrollToPosition(mPosition);
 
-        if (movies != null && movies.size() != 0) showMovieDataView();
-        else showLoading();
+        if (movies != null && movies.size() != 0) {
+            showMovieDataView();
+        } else {
+            showLoading();
+        }
     };
 
     @Override
@@ -66,19 +67,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         setContentView(R.layout.activity_movie);
         ButterKnife.bind(this);
 
-        MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
-        if (getClass().isAssignableFrom(MovieActivity.class)) {
-            mViewModel = ViewModelProviders.of(this, factory).get(MovieActivityViewModel.class);
-        } else if (getClass().isAssignableFrom(BookmarkActivity.class)) {
-            mViewModel = ViewModelProviders.of(this, factory).get(BookmarkActivityViewModel.class);
-        }
+        mViewModel = getViewModel();
 
-        setTitle(setActionBarTitle());
+        setTitle(getActionBarTitle());
         setUpRecyclerView();
         loadDataView();
     }
 
-    public abstract String setActionBarTitle();
+    public abstract String getActionBarTitle();
+
+    public abstract ViewModel getViewModel();
 
     /**
      * Shows loading if the given
@@ -101,13 +99,13 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
      */
     private void setUpRecyclerView() {
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
+        mLayoutManager = new GridLayoutManager(this, ViewHelper.calculateNoOfColumns(this));
         mMoviesAdapter = new MoviesAdapter(this);
 
         LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layoutanimation_fall_down);
 
         moviesRecyclerView.setLayoutAnimation(animationController);
-        moviesRecyclerView.setLayoutManager(layoutManager);
+        moviesRecyclerView.setLayoutManager(mLayoutManager);
         moviesRecyclerView.setHasFixedSize(true);
         moviesRecyclerView.setAdapter(mMoviesAdapter);
     }
@@ -125,10 +123,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         progressbar.setVisibility(View.INVISIBLE);
     }
 
-    public <T extends ViewModel> T getViewModel() {
-        return (T) mViewModel;
-    }
-
     @Override
     public void onItemClickedWithImage(ImageView imageView, Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
@@ -140,5 +134,19 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
     @Override
     public void onItemClicked(String key) {
         //Unused here (We just need the Clicked with Image to animate it
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ISTATE_RECYCLERVIEW_POSITION, mLayoutManager.onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mLayoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(ISTATE_RECYCLERVIEW_POSITION));
+        }
     }
 }

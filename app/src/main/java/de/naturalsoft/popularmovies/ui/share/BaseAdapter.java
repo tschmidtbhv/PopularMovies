@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import de.naturalsoft.popularmovies.utils.NetworkHelper;
+import de.naturalsoft.popularmovies.utils.helper.NetworkHelper;
 
 /**
  * PopularMovies

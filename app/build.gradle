@@ -32,6 +32,7 @@ ext {
     retrofit_version = "2.4.0"
     gson_version = "2.8.4"
     room_version = "1.1.0"
+    rxjava_version = "2.1.16"
 }
 
 dependencies {
@@ -57,6 +58,10 @@ dependencies {
     //GSON & Converter
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    //RXJAVA
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -14,7 +14,7 @@ Libraries are used in this Project are:
 - Retrofit
 - GSON & Converter
 - CardView
-
+- RXJAVA
 
 
 ## Common Project Requirements Stage 1

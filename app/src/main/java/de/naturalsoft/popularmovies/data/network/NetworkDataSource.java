@@ -17,7 +17,7 @@ import de.naturalsoft.popularmovies.data.DataObjects.TrailerResponse.Trailer;
 import de.naturalsoft.popularmovies.data.database.MovieResponse;
 import de.naturalsoft.popularmovies.error.NoKeyError;
 import de.naturalsoft.popularmovies.utils.Constants.BuildConfig;
-import de.naturalsoft.popularmovies.utils.DataHelper;
+import de.naturalsoft.popularmovies.utils.helper.DataHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

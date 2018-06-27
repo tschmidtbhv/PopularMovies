@@ -7,11 +7,15 @@ package de.naturalsoft.popularmovies.utils;
 public interface Constants {
 
     int MOVIESSTDID = -1;
-    String MOVIEKEY = "MOVIEKEY";
     String MOVIESTITLE = "MOVIESTITLE";
     String ISBOOKMARK = "ISBOOKMARK";
     String TRAILERTYPE = "TRAILER";
     String REVIEWTYPE = "REVIEW";
+
+
+    //STATES
+    String MOVIEKEY = "MOVIEKEY";
+    String ISTATE_RECYCLERVIEW_POSITION = "ISTATE_RECYCLERVIEW_POSITION";
 
     interface BuildConfig {
 

@@ -32,7 +32,7 @@ import de.naturalsoft.popularmovies.ui.share.Listener.OnItemClickListener;
 import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
 import de.naturalsoft.popularmovies.utils.InjectorUtil;
-import de.naturalsoft.popularmovies.utils.NetworkHelper;
+import de.naturalsoft.popularmovies.utils.helper.NetworkHelper;
 
 import static de.naturalsoft.popularmovies.utils.Constants.BuildConfig.SHARETYPE;
 

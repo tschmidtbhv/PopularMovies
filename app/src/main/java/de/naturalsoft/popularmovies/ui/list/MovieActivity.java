@@ -1,5 +1,7 @@
 package de.naturalsoft.popularmovies.ui.list;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +14,10 @@ import de.naturalsoft.popularmovies.R;
 import de.naturalsoft.popularmovies.ui.BaseActivity;
 import de.naturalsoft.popularmovies.ui.bookmark.BookmarkActivity;
 import de.naturalsoft.popularmovies.ui.setting.SettingsActivity;
+import de.naturalsoft.popularmovies.ui.share.MovieViewModelFactory;
 import de.naturalsoft.popularmovies.utils.Constants;
-import de.naturalsoft.popularmovies.utils.NetworkHelper;
+import de.naturalsoft.popularmovies.utils.InjectorUtil;
+import de.naturalsoft.popularmovies.utils.helper.NetworkHelper;
 
 public class MovieActivity extends BaseActivity {
 
@@ -70,7 +74,13 @@ public class MovieActivity extends BaseActivity {
 
 
     @Override
-    public String setActionBarTitle() {
+    public String getActionBarTitle() {
         return getString(R.string.movies);
+    }
+
+    @Override
+    public ViewModel getViewModel() {
+        MovieViewModelFactory factory = (MovieViewModelFactory) InjectorUtil.provideMovieViewModelFactory(this);
+        return ViewModelProviders.of(this, factory).get(MovieActivityViewModel.class);
     }
 }

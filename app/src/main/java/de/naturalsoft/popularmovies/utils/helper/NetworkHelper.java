@@ -1,4 +1,4 @@
-package de.naturalsoft.popularmovies.utils;
+package de.naturalsoft.popularmovies.utils.helper;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

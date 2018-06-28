@@ -1,4 +1,5 @@
 # PopularMovies Stage 2
+![alt text](https://github.com/tschmidtbhv/PopularMovies/blob/master/Screenshot_1530210772.png)
 
 - Popular Movies app for Udacity Android Developer Nanodegree
 - This app retrieves data from [The Movie DB](https://www.themoviedb.org)
